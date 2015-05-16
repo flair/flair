@@ -1,0 +1,5 @@
+bin
+obj
+flair.xcodeproj
+flair.xcworkspace
+tests.xcodeproj

@@ -3,3 +3,8 @@ obj
 flair.xcodeproj
 flair.xcworkspace
 tests.xcodeproj
+flair.sln
+flair.vcxproj*
+tests.vcxproj*
+flair.sdf
+flair.v12.suo

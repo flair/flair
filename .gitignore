@@ -8,3 +8,4 @@ flair.vcxproj*
 tests.vcxproj*
 flair.sdf
 flair.v12.suo
+*.opensdf

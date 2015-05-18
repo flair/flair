@@ -1,5 +1,10 @@
 solution "flair"
    configurations { "Debug", "Release" }
+   filter { "action:xcode*" }
+      xcodebuildsettings {
+         ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++11",
+         ["CLANG_CXX_LIBRARY"] = "libc++"
+      }
 
 project "flair"
    kind "StaticLib"

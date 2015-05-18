@@ -42,7 +42,7 @@ namespace flair {
          void removeChildren(int beginIndex = 0, int endIndex = std::numeric_limits<int>::max());
                   
       protected:
-         std::vector< std::shared_ptr<DisplayObject> > _children;
+         std::vector<std::shared_ptr<DisplayObject>> _children;
       };
       
    }

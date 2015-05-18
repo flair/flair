@@ -22,6 +22,8 @@ namespace {
       auto child = container->addChild(image);
       EXPECT_EQ(child->parent(), container);
       EXPECT_EQ(container->numChildren(), 1);
+      
+      delete container;
    }
    
    TEST_F(DisplayObjectContainerTest, Contains)
@@ -31,5 +33,7 @@ namespace {
       
       auto child = container->addChild(image);
       EXPECT_TRUE(container->contains(child));
+      
+      delete container;
    }
 }

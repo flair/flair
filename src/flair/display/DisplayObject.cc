@@ -1,4 +1,6 @@
 #include "flair/display/DisplayObject.h"
+#include "flair/display/DisplayObjectContainer.h"
+#include "flair/display/Stage.h"
 
 using flair::geom::Rectangle;
 using flair::geom::Matrix;
@@ -6,6 +8,17 @@ using flair::geom::Point;
 
 namespace flair {
    namespace display {
+      
+      DisplayObject::DisplayObject()
+      {
+         _stage = nullptr;
+         _parent = nullptr;
+      }
+      
+      DisplayObject::~DisplayObject()
+      {
+         
+      }
       
       std::string DisplayObject::name() const
       {
@@ -27,7 +40,7 @@ namespace flair {
          return _alpha = alpha;
       }
       
-      const Rectangle * DisplayObject::bounds() const
+      const Rectangle* DisplayObject::bounds() const
       {
          return &_bounds;
       }
@@ -77,22 +90,29 @@ namespace flair {
          return _y = y;
       }
       
-      Stage * DisplayObject::stage() const
+      const Stage* DisplayObject::stage() const
       {
          return _stage;
       }
       
-      DisplayObjectContainer * DisplayObject::root() const
+      const DisplayObjectContainer* DisplayObject::root() const
       {
-         return _root;
+         const DisplayObject* currentObject = this;
+         while (currentObject->parent() != nullptr)
+         {
+            auto root = dynamic_cast<const Stage*>(currentObject->parent());
+            if (root != nullptr) {
+               return root;
+            }
+            else {
+               currentObject = currentObject->parent();
+            }
+         }
+         
+         return nullptr;
       }
       
-      DisplayObjectContainer * DisplayObject::base() const
-      {
-         return _base;
-      }
-      
-      DisplayObjectContainer * DisplayObject::parent() const
+      const DisplayObjectContainer* DisplayObject::parent() const
       {
          return _parent;
       }
@@ -187,41 +207,45 @@ namespace flair {
          return _visible = visible;
       }
       
-      
-      void DisplayObject::dispose()
-      {
-         
-      }
-      
-      Rectangle DisplayObject::getBounds(DisplayObject targetSpace, Rectangle *result) const
+      Rectangle DisplayObject::getBounds(DisplayObject targetSpace, Rectangle* result) const
       {
          Rectangle r;
          return r;
       }
       
-      Matrix DisplayObject::getTransformationMatrix(DisplayObject targetSpace, Matrix *result) const
+      Matrix DisplayObject::getTransformationMatrix(DisplayObject targetSpace, Matrix* result) const
       {
          Matrix m;
          return m;
       }
       
-      Point DisplayObject::globalToLocal(Point localPoint, Point *result) const
+      Point DisplayObject::globalToLocal(Point localPoint, Point* result) const
       {
          Point p;
          return p;
       }
       
-      DisplayObject * DisplayObject::hitTest(Point localPoint, bool forTouch) const
+      std::shared_ptr<DisplayObject> DisplayObject::hitTest(Point localPoint, bool forTouch) const
       {
-         return 0;
+         return std::shared_ptr<DisplayObject>();
       }
       
-      void DisplayObject::removeFromParent(bool dispose)
+      void DisplayObject::setParent(DisplayObjectContainer* parent)
       {
+         auto ancestor = dynamic_cast<const DisplayObject*>(parent);
+         while (ancestor != this && ancestor != nullptr) {
+            ancestor = dynamic_cast<const DisplayObject*>(ancestor->parent());
+         }
          
+         if (ancestor == this) {
+            throw std::invalid_argument("An object cannot be added as a child to itself or one of its children (or children's children, etc.)");
+         }
+         else {
+            _parent = parent;
+         }
       }
       
-      void DisplayObject::render(RenderSupport *support, float parentAlpha)
+      void DisplayObject::render(RenderSupport* support, float parentAlpha)
       {
          
       }

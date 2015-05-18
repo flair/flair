@@ -1,6 +1,7 @@
 #ifndef flair_display_DisplayObject_h
 #define flair_display_DisplayObject_h
 
+#include <memory>
 #include <string>
 
 #include "flair/display/RenderSupport.h"
@@ -18,6 +19,7 @@ namespace flair {
       
       class DisplayObject
       {
+      friend class DisplayObjectContainer;
       public:
          DisplayObject();
          virtual ~DisplayObject();
@@ -31,7 +33,7 @@ namespace flair {
          float alpha() const;
          float alpha(float alpha);
          
-         const flair::geom::Rectangle * bounds() const;
+         const flair::geom::Rectangle* bounds() const;
          bool hasVisibleArea() const;
          
          float height() const;
@@ -46,11 +48,10 @@ namespace flair {
          float y() const;
          float y(float y);
          
-         Stage * stage() const;
+         const Stage* stage() const;
          
-         DisplayObjectContainer * root() const;
-         DisplayObjectContainer * base() const;
-         DisplayObjectContainer * parent() const;
+         const DisplayObjectContainer* root() const;
+         const DisplayObjectContainer* parent() const;
          
          flair::geom::Matrix transformationMatrix() const;
          flair::geom::Matrix transformationMatrix(flair::geom::Matrix m);
@@ -82,21 +83,20 @@ namespace flair {
          
       // Methods
       public:
-         void dispose();
+         flair::geom::Rectangle getBounds(DisplayObject targetSpace, flair::geom::Rectangle* result = 0) const;
          
-         flair::geom::Rectangle getBounds(DisplayObject targetSpace, flair::geom::Rectangle *result = 0) const;
+         flair::geom::Matrix getTransformationMatrix(DisplayObject targetSpace, flair::geom::Matrix* result = 0) const;
          
-         flair::geom::Matrix getTransformationMatrix(DisplayObject targetSpace, flair::geom::Matrix *result = 0) const;
+         flair::geom::Point globalToLocal(flair::geom::Point localPoint, flair::geom::Point* result = 0) const;
          
-         flair::geom::Point globalToLocal(flair::geom::Point localPoint, flair::geom::Point *result = 0) const;
-         
-         DisplayObject * hitTest(flair::geom::Point localPoint, bool forTouch = false) const;
-         
-         void removeFromParent(bool dispose = false);
+         std::shared_ptr<DisplayObject> hitTest(flair::geom::Point localPoint, bool forTouch = false) const;
          
          
+      // Internal Methods
       protected:
+         void setParent(DisplayObjectContainer* parent);
          void render(RenderSupport *support, float parentAlpha);
+         
          
       protected:
          std::string _name;
@@ -111,10 +111,8 @@ namespace flair {
          float _x;
          float _y;
          
-         Stage * _stage;
-         DisplayObjectContainer * _root;
-         DisplayObjectContainer * _base;
-         DisplayObjectContainer * _parent;
+         Stage* _stage;
+         DisplayObjectContainer* _parent;
          
          flair::geom::Matrix _transformationMatrix;
          float _pivotX;

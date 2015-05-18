@@ -8,8 +8,9 @@ namespace flair {
       
       class Image : public DisplayObject
       {
-         public Image();
-         virtual ~Image;
+      public:
+         Image();
+         virtual ~Image();
       };
       
    }

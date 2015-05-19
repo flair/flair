@@ -11,8 +11,8 @@ namespace flair {
       
       DisplayObject::DisplayObject()
       {
-         _stage = nullptr;
-         _parent = nullptr;
+         _stage = std::weak_ptr<Stage>();
+         _parent = std::weak_ptr<DisplayObjectContainer>();
       }
       
       DisplayObject::~DisplayObject()
@@ -92,7 +92,11 @@ namespace flair {
       
       std::shared_ptr<Stage> DisplayObject::stage() const
       {
-         return _stage;
+         if (_stage.expired()) {
+            std::shared_ptr<Stage>();
+         }
+
+         return std::shared_ptr<Stage>(_stage);
       }
       
       std::shared_ptr<DisplayObjectContainer> DisplayObject::root() const
@@ -114,7 +118,11 @@ namespace flair {
       
       std::shared_ptr<DisplayObjectContainer> DisplayObject::parent() const
       {
-         return _parent;
+         if (_parent.expired()) {
+            return std::shared_ptr<DisplayObjectContainer>();
+         }
+
+         return std::shared_ptr<DisplayObjectContainer>(_parent);
       }
       
       Matrix DisplayObject::transformationMatrix() const
@@ -230,9 +238,9 @@ namespace flair {
          return std::shared_ptr<DisplayObject>();
       }
       
-      void DisplayObject::setParent(std::shared_ptr<DisplayObjectContainer>& parent)
+      void DisplayObject::setParent(std::weak_ptr<DisplayObjectContainer> parent)
       {
-         auto ancestor = dynamic_cast<const DisplayObject*>(parent.get());
+         auto ancestor = dynamic_cast<const DisplayObject*>(parent.lock().get());
          while (ancestor != this && ancestor != nullptr) {
             ancestor = dynamic_cast<const DisplayObject*>(ancestor->parent().get());
          }

@@ -96,7 +96,7 @@ namespace flair {
          
       // Internal Methods
       protected:
-         void setParent(std::shared_ptr<DisplayObjectContainer>& parent);
+         void setParent(std::weak_ptr<DisplayObjectContainer> parent);
          void render(RenderSupport *support, float parentAlpha);
          
          
@@ -113,8 +113,8 @@ namespace flair {
          float _x;
          float _y;
          
-         std::shared_ptr<Stage> _stage;
-         std::shared_ptr<DisplayObjectContainer> _parent;
+         std::weak_ptr<Stage> _stage;
+         std::weak_ptr<DisplayObjectContainer> _parent;
          
          flair::geom::Matrix _transformationMatrix;
          float _pivotX;

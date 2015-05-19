@@ -42,8 +42,9 @@ namespace flair {
          }
          else
          {
-            if (child->parent()) {
-               child->_parent->removeChild(child);
+            std::shared_ptr<DisplayObjectContainer> parent = child->parent();
+            if (parent) {
+               parent->removeChild(child);
             }
             
             if (index == numChildren()) {
@@ -52,12 +53,12 @@ namespace flair {
             else {
                _children.insert(_children.begin() + index, child);
             }
-            
-            auto parent = base();
-            child->setParent(parent);
+
+            parent = std::static_pointer_cast<DisplayObjectContainer>(this->_instance.lock());
+            child->setParent(std::weak_ptr<DisplayObjectContainer>(parent));
             //child.dispatchEventWith(Event.ADDED, true);
-            
-            if (_stage)
+
+            if (!_stage.expired())
             {
                auto container = dynamic_cast<DisplayObjectContainer*>(child.get());
                if (container != nullptr) {
@@ -68,7 +69,7 @@ namespace flair {
                }
             }
          }
-      
+
          return child;
       }
       
@@ -113,7 +114,7 @@ namespace flair {
       {
          int childIndex = getChildIndex(child);
          if (childIndex != -1) removeChildAt(childIndex);
-         
+
          return child;
       }
       
@@ -123,8 +124,8 @@ namespace flair {
          
          auto child = _children[index];
          //child.dispatchEventWith(Event.REMOVED, true);
-         
-         if (_stage != nullptr)
+
+         if (!_stage.expired())
          {
             auto container = dynamic_cast<const DisplayObjectContainer*>(child.get());
             if (container != nullptr) {
@@ -135,7 +136,7 @@ namespace flair {
             }
          }
          
-         auto emptyParent = std::shared_ptr<DisplayObjectContainer>();
+         auto emptyParent = std::weak_ptr<DisplayObjectContainer>();
          child->setParent(emptyParent);
          auto it = std::find(_children.begin(), _children.end(), child); // index might have changed by event handler
          if (it != _children.end()) _children.erase(it);

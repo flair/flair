@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "flair/Object.h"
 #include "flair/display/RenderSupport.h"
 
 #include "flair/geom/Matrix.h"
@@ -16,13 +17,14 @@ namespace flair {
       class Stage;
       class DisplayObjectContainer;
       
-      
-      class DisplayObject
+      class DisplayObject : public Object
       {
-      friend class DisplayObjectContainer;
+         using Object::Object;
+         friend class DisplayObjectContainer;
+         
       public:
          DisplayObject();
-         virtual ~DisplayObject();
+         virtual ~DisplayObject() = 0;
          
          
       // Properties
@@ -48,10 +50,10 @@ namespace flair {
          float y() const;
          float y(float y);
          
-         const Stage* stage() const;
+         std::shared_ptr<Stage> stage() const;
          
-         const DisplayObjectContainer* root() const;
-         const DisplayObjectContainer* parent() const;
+         std::shared_ptr<DisplayObjectContainer> root() const;
+         std::shared_ptr<DisplayObjectContainer> parent() const;
          
          flair::geom::Matrix transformationMatrix() const;
          flair::geom::Matrix transformationMatrix(flair::geom::Matrix m);
@@ -83,9 +85,9 @@ namespace flair {
          
       // Methods
       public:
-         flair::geom::Rectangle getBounds(DisplayObject targetSpace, flair::geom::Rectangle* result = 0) const;
+         flair::geom::Rectangle getBounds(std::shared_ptr<DisplayObject> targetSpace, flair::geom::Rectangle* result = 0) const;
          
-         flair::geom::Matrix getTransformationMatrix(DisplayObject targetSpace, flair::geom::Matrix* result = 0) const;
+         flair::geom::Matrix getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace, flair::geom::Matrix* result = 0) const;
          
          flair::geom::Point globalToLocal(flair::geom::Point localPoint, flair::geom::Point* result = 0) const;
          
@@ -94,7 +96,7 @@ namespace flair {
          
       // Internal Methods
       protected:
-         void setParent(DisplayObjectContainer* parent);
+         void setParent(std::shared_ptr<DisplayObjectContainer>& parent);
          void render(RenderSupport *support, float parentAlpha);
          
          
@@ -111,8 +113,8 @@ namespace flair {
          float _x;
          float _y;
          
-         Stage* _stage;
-         DisplayObjectContainer* _parent;
+         std::shared_ptr<Stage> _stage;
+         std::shared_ptr<DisplayObjectContainer> _parent;
          
          flair::geom::Matrix _transformationMatrix;
          float _pivotX;

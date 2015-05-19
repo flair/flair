@@ -1,14 +1,14 @@
-#include "flair/display/Stage.h"
+#include "flair/display/Sprite.h"
 
 namespace flair {
    namespace display {
       
-      Stage::Stage() : DisplayObjectContainer()
+      Sprite::Sprite() : DisplayObjectContainer()
       {
          
       }
       
-      Stage::~Stage()
+      Sprite::~Sprite()
       {
          
       }

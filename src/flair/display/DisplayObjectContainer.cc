@@ -27,32 +27,22 @@ namespace flair {
          return it != _children.end();
       }
       
-      std::shared_ptr<DisplayObject> DisplayObjectContainer::addChild(DisplayObject* child)
-      {
-         return addChildAt(child, _children.size());
-      }
-      
       std::shared_ptr<DisplayObject> DisplayObjectContainer::addChild(std::shared_ptr<DisplayObject> child)
       {
          return addChildAt(child, _children.size());
-      }
-      
-      std::shared_ptr<DisplayObject> DisplayObjectContainer::addChildAt(DisplayObject* child, int index)
-      {
-         return addChildAt(std::shared_ptr<DisplayObject>(child), index);
       }
       
       std::shared_ptr<DisplayObject> DisplayObjectContainer::addChildAt(std::shared_ptr<DisplayObject> child, int index)
       {
          if (index < 0 || index > _children.size()) throw std::out_of_range("Invalid child index");
          
-         if (child->parent() == this)
+         if (child->parent().get() == this)
          {
             setChildIndex(child, index);
          }
          else
          {
-            if (child->parent() != nullptr) {
+            if (child->parent()) {
                child->_parent->removeChild(child);
             }
             
@@ -63,10 +53,11 @@ namespace flair {
                _children.insert(_children.begin() + index, child);
             }
             
-            child->setParent(this);
+            auto parent = base();
+            child->setParent(parent);
             //child.dispatchEventWith(Event.ADDED, true);
             
-            if (stage() != nullptr)
+            if (_stage)
             {
                auto container = dynamic_cast<DisplayObjectContainer*>(child.get());
                if (container != nullptr) {
@@ -144,7 +135,8 @@ namespace flair {
             }
          }
          
-         child->setParent(nullptr);
+         auto emptyParent = std::shared_ptr<DisplayObjectContainer>();
+         child->setParent(emptyParent);
          auto it = std::find(_children.begin(), _children.end(), child); // index might have changed by event handler
          if (it != _children.end()) _children.erase(it);
          
@@ -158,6 +150,11 @@ namespace flair {
          for (int i = beginIndex; i <= endIndex; ++i) {
             removeChildAt(beginIndex);
          }
+      }
+      
+      std::shared_ptr<DisplayObjectContainer> DisplayObjectContainer::base()
+      {
+         return std::static_pointer_cast<DisplayObjectContainer>( std::shared_ptr<Object>(this->_instance) );
       }
       
    }

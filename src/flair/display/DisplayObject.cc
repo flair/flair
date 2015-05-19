@@ -90,29 +90,29 @@ namespace flair {
          return _y = y;
       }
       
-      const Stage* DisplayObject::stage() const
+      std::shared_ptr<Stage> DisplayObject::stage() const
       {
          return _stage;
       }
       
-      const DisplayObjectContainer* DisplayObject::root() const
+      std::shared_ptr<DisplayObjectContainer> DisplayObject::root() const
       {
          const DisplayObject* currentObject = this;
-         while (currentObject->parent() != nullptr)
+         while (currentObject->parent())
          {
-            auto root = dynamic_cast<const Stage*>(currentObject->parent());
+            auto root = dynamic_cast<const Stage*>(currentObject->parent().get());
             if (root != nullptr) {
-               return root;
+               return currentObject->parent();
             }
             else {
-               currentObject = currentObject->parent();
+               currentObject = currentObject->parent().get();
             }
          }
          
-         return nullptr;
+         return std::shared_ptr<DisplayObjectContainer>();
       }
       
-      const DisplayObjectContainer* DisplayObject::parent() const
+      std::shared_ptr<DisplayObjectContainer> DisplayObject::parent() const
       {
          return _parent;
       }
@@ -207,13 +207,13 @@ namespace flair {
          return _visible = visible;
       }
       
-      Rectangle DisplayObject::getBounds(DisplayObject targetSpace, Rectangle* result) const
+      Rectangle DisplayObject::getBounds(std::shared_ptr<DisplayObject> targetSpace, Rectangle* result) const
       {
          Rectangle r;
          return r;
       }
       
-      Matrix DisplayObject::getTransformationMatrix(DisplayObject targetSpace, Matrix* result) const
+      Matrix DisplayObject::getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace, Matrix* result) const
       {
          Matrix m;
          return m;
@@ -230,11 +230,11 @@ namespace flair {
          return std::shared_ptr<DisplayObject>();
       }
       
-      void DisplayObject::setParent(DisplayObjectContainer* parent)
+      void DisplayObject::setParent(std::shared_ptr<DisplayObjectContainer>& parent)
       {
-         auto ancestor = dynamic_cast<const DisplayObject*>(parent);
+         auto ancestor = dynamic_cast<const DisplayObject*>(parent.get());
          while (ancestor != this && ancestor != nullptr) {
-            ancestor = dynamic_cast<const DisplayObject*>(ancestor->parent());
+            ancestor = dynamic_cast<const DisplayObject*>(ancestor->parent().get());
          }
          
          if (ancestor == this) {

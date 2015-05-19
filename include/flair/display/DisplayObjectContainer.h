@@ -25,10 +25,7 @@ namespace flair {
       public:
          bool contains(std::shared_ptr<DisplayObject> child);
          
-         std::shared_ptr<DisplayObject> addChild(DisplayObject* child);
          std::shared_ptr<DisplayObject> addChild(std::shared_ptr<DisplayObject> child);
-         
-         std::shared_ptr<DisplayObject> addChildAt(DisplayObject* child, int index);
          std::shared_ptr<DisplayObject> addChildAt(std::shared_ptr<DisplayObject> child, int index);
          
          std::shared_ptr<DisplayObject> getChildAt(int index) const;
@@ -40,7 +37,10 @@ namespace flair {
          std::shared_ptr<DisplayObject> removeChild(std::shared_ptr<DisplayObject> child);
          std::shared_ptr<DisplayObject> removeChildAt(int index);
          void removeChildren(int beginIndex = 0, int endIndex = std::numeric_limits<int>::max());
-                  
+         
+      protected:
+         std::shared_ptr<DisplayObjectContainer> base();
+         
       protected:
          std::vector<std::shared_ptr<DisplayObject>> _children;
       };

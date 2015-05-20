@@ -54,14 +54,13 @@ namespace flair {
                _children.insert(_children.begin() + index, child);
             }
 
-            parent = std::static_pointer_cast<DisplayObjectContainer>(this->_instance.lock());
-            child->setParent(std::weak_ptr<DisplayObjectContainer>(parent));
+            child->setParent(instance<DisplayObjectContainer>());
             //child.dispatchEventWith(Event.ADDED, true);
 
-            if (!_stage.expired())
+            if (stage())
             {
-               auto container = dynamic_cast<DisplayObjectContainer*>(child.get());
-               if (container != nullptr) {
+               auto container = std::dynamic_pointer_cast<DisplayObjectContainer*>(child);
+               if (container) {
                   //container.broadcastEventWith(Event.ADDED_TO_STAGE);
                }
                else {
@@ -125,10 +124,10 @@ namespace flair {
          auto child = _children[index];
          //child.dispatchEventWith(Event.REMOVED, true);
 
-         if (!_stage.expired())
+         if (stage())
          {
-            auto container = dynamic_cast<const DisplayObjectContainer*>(child.get());
-            if (container != nullptr) {
+            auto container = std::dynamic_pointer_cast<DisplayObjectContainer>(child);
+            if (container) {
                //container.broadcastEventWith(Event.REMOVED_FROM_STAGE);
             }
             else {
@@ -136,8 +135,7 @@ namespace flair {
             }
          }
          
-         auto emptyParent = std::weak_ptr<DisplayObjectContainer>();
-         child->setParent(emptyParent);
+         child->setParent(std::shared_ptr<DisplayObjectContainer>());
          auto it = std::find(_children.begin(), _children.end(), child); // index might have changed by event handler
          if (it != _children.end()) _children.erase(it);
          
@@ -151,11 +149,6 @@ namespace flair {
          for (int i = beginIndex; i <= endIndex; ++i) {
             removeChildAt(beginIndex);
          }
-      }
-      
-      std::shared_ptr<DisplayObjectContainer> DisplayObjectContainer::base()
-      {
-         return std::static_pointer_cast<DisplayObjectContainer>( std::shared_ptr<Object>(this->_instance) );
       }
       
    }

@@ -19,11 +19,12 @@ namespace flair {
       
       class DisplayObject : public Object
       {
-         using Object::Object;
          friend class DisplayObjectContainer;
          
-      public:
+      protected:
          DisplayObject();
+         
+      public:
          virtual ~DisplayObject() = 0;
          
          
@@ -96,7 +97,7 @@ namespace flair {
          
       // Internal Methods
       protected:
-         void setParent(std::weak_ptr<DisplayObjectContainer> parent);
+         void setParent(std::shared_ptr<DisplayObjectContainer> parent);
          void render(RenderSupport *support, float parentAlpha);
          
          
@@ -113,7 +114,6 @@ namespace flair {
          float _x;
          float _y;
          
-         std::weak_ptr<Stage> _stage;
          std::weak_ptr<DisplayObjectContainer> _parent;
          
          flair::geom::Matrix _transformationMatrix;

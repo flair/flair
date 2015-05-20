@@ -16,14 +16,19 @@ namespace flair {
       
    public:
       virtual ~Object() = 0;
+   
       
    // Methods
    public:
       virtual std::string toString();
    
+      
    // Internal
    protected:
       std::weak_ptr<Object> _instance;
+      
+      template<typename T>
+      std::shared_ptr<T> instance() const { return std::static_pointer_cast<T>(_instance.lock()); }
    };
    
 }

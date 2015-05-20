@@ -11,7 +11,6 @@ namespace flair {
       
       DisplayObject::DisplayObject()
       {
-         _stage = std::weak_ptr<Stage>();
          _parent = std::weak_ptr<DisplayObjectContainer>();
       }
       
@@ -92,24 +91,20 @@ namespace flair {
       
       std::shared_ptr<Stage> DisplayObject::stage() const
       {
-         if (_stage.expired()) {
-            std::shared_ptr<Stage>();
-         }
-
-         return std::shared_ptr<Stage>(_stage);
+         return std::dynamic_pointer_cast<Stage>(root());
       }
       
       std::shared_ptr<DisplayObjectContainer> DisplayObject::root() const
       {
-         const DisplayObject* currentObject = this;
+         std::shared_ptr<DisplayObject> currentObject = instance<DisplayObject>();
          while (currentObject->parent())
          {
-            auto root = dynamic_cast<const Stage*>(currentObject->parent().get());
-            if (root != nullptr) {
-               return currentObject->parent();
+            auto root = std::dynamic_pointer_cast<Stage>(currentObject->parent());
+            if (root) {
+               return root;
             }
             else {
-               currentObject = currentObject->parent().get();
+               currentObject = currentObject->parent();
             }
          }
          
@@ -118,11 +113,7 @@ namespace flair {
       
       std::shared_ptr<DisplayObjectContainer> DisplayObject::parent() const
       {
-         if (_parent.expired()) {
-            return std::shared_ptr<DisplayObjectContainer>();
-         }
-
-         return std::shared_ptr<DisplayObjectContainer>(_parent);
+            return _parent.lock();
       }
       
       Matrix DisplayObject::transformationMatrix() const
@@ -238,14 +229,14 @@ namespace flair {
          return std::shared_ptr<DisplayObject>();
       }
       
-      void DisplayObject::setParent(std::weak_ptr<DisplayObjectContainer> parent)
+      void DisplayObject::setParent(std::shared_ptr<DisplayObjectContainer> parent)
       {
-         auto ancestor = dynamic_cast<const DisplayObject*>(parent.lock().get());
-         while (ancestor != this && ancestor != nullptr) {
-            ancestor = dynamic_cast<const DisplayObject*>(ancestor->parent().get());
+         std::shared_ptr<DisplayObject> ancestor = parent;
+         while (ancestor && ancestor.get() != this) {
+            ancestor = ancestor->parent();
          }
          
-         if (ancestor == this) {
+         if (ancestor.get() == this) {
             throw std::invalid_argument("An object cannot be added as a child to itself or one of its children (or children's children, etc.)");
          }
          else {

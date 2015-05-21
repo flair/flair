@@ -8,7 +8,7 @@
 namespace flair {
    
    template<typename T, typename... Ts>
-   std::shared_ptr<T> make_shared(Ts&&... params)
+   std::shared_ptr<T> create(Ts&&... params)
    {
       static_assert(std::is_base_of<Object, T>::value, "Class must inherit from flair::Object to instantiate");
 

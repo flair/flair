@@ -12,7 +12,7 @@ namespace flair {
       
    }
    
-   std::string Object::toString()
+   std::string Object::toString() const
    {
       return "[Object object]";
    }

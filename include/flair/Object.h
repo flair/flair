@@ -8,8 +8,8 @@ namespace flair {
    
    class Object
    {
-      template<typename U, typename... Us>
-      friend std::shared_ptr<U> make_shared(Us&&... params);
+      template<typename T, typename... Ts>
+      friend std::shared_ptr<T> create(Ts&&... params);
       
    protected:
       Object();
@@ -20,13 +20,13 @@ namespace flair {
       
    // Methods
    public:
-      virtual std::string toString();
+      virtual std::string toString() const;
    
       
    // Internal
-   protected:
+   private:
       std::weak_ptr<Object> _instance;
-      
+   protected:
       template<typename T>
       std::shared_ptr<T> instance() const { return std::static_pointer_cast<T>(_instance.lock()); }
    };

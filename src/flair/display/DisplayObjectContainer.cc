@@ -59,7 +59,7 @@ namespace flair {
 
             if (stage())
             {
-               auto container = std::dynamic_pointer_cast<DisplayObjectContainer*>(child);
+               auto container = std::dynamic_pointer_cast<DisplayObjectContainer>(child);
                if (container) {
                   //container.broadcastEventWith(Event.ADDED_TO_STAGE);
                }

@@ -9,7 +9,7 @@ namespace flair {
       
       class Stage : public DisplayObjectContainer
       {
-         friend std::shared_ptr<Stage> flair::make_shared<Stage>();
+         friend std::shared_ptr<Stage> flair::create<Stage>();
          
       protected:
          Stage();

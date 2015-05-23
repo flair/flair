@@ -13,5 +13,10 @@ namespace flair {
          
       }
       
+      std::string Image::toString() const
+      {
+         return "[Image image]";
+      }
+      
    }
 }

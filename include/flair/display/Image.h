@@ -16,6 +16,10 @@ namespace flair {
          
       public:
          virtual ~Image();
+         
+      // Methods
+      public:
+         std::string toString() const override;
       };
       
    }

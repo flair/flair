@@ -57,4 +57,14 @@ namespace {
       EXPECT_TRUE(stage->contains(child));
       
    }
+   
+   TEST_F(DisplayObjectContainerTest, trace)
+   {
+      auto image = flair::create<Image>();
+      auto sprite = flair::create<Sprite>();
+      
+      auto object = std::shared_ptr<flair::Object>(image);
+      
+      flair::trace("Testing the trace command", "with", image);
+   }
 }

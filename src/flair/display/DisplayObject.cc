@@ -2,6 +2,8 @@
 #include "flair/display/DisplayObjectContainer.h"
 #include "flair/display/Stage.h"
 
+#include <stdexcept>
+
 using flair::geom::Rectangle;
 using flair::geom::Matrix;
 using flair::geom::Point;

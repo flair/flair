@@ -9,3 +9,5 @@ tests.vcxproj*
 flair.sdf
 flair.v12.suo
 *.opensdf
+Makefile
+*.make

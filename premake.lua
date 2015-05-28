@@ -5,6 +5,8 @@ solution "flair"
          ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++11",
          ["CLANG_CXX_LIBRARY"] = "libc++"
       }
+   filter { "action:gmake*" }
+      buildoptions { "-std=c++11" }
 
 project "flair"
    kind "StaticLib"
@@ -33,6 +35,8 @@ project "tests"
    files { "tests/**.cc", "vendor/googletest/src/gtest_main.cc", "vendor/googletest/src/gtest-all.cc" }
 
    links "flair"
+   filter { "action:gmake*" }
+      links "pthread"
 
    filter "configurations:Debug"
       defines { "DEBUG" }
@@ -41,3 +45,6 @@ project "tests"
    filter "configurations:Release"
       defines { "NDEBUG" }
       optimize "On"
+
+
+

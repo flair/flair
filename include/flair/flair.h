@@ -12,7 +12,7 @@ namespace {
    {
    public:
       std::string s;
-
+      
    public:
       TraceArgs(int value) { s = std::to_string(value); }
       TraceArgs(unsigned int value) { s = std::to_string(value); }
@@ -20,11 +20,11 @@ namespace {
       TraceArgs(double value) { s = std::to_string(value); }
       TraceArgs(std::string value) { s = value; }
       TraceArgs(const char* value) { s = std::string(value); }
-
+      
       template <class T, class = flair::Object>
       TraceArgs(std::shared_ptr<T> value) { s = value->toString(); }
    };
-
+   
    void doTrace(const TraceArgs* args, size_t num_args)
    {
       for (size_t i = 0; i < num_args; ++i) {
@@ -35,7 +35,7 @@ namespace {
 }
 
 namespace flair {
-
+   
    template<typename T, typename... Ts>
    std::shared_ptr<T> create(Ts&&... params)
    {
@@ -45,7 +45,7 @@ namespace flair {
       std::static_pointer_cast<Object>(ptr)->_instance = std::weak_ptr<T>(ptr);
       return ptr;
    }
-
+   
    template <typename... Args>
    void trace(const Args&... args)
    {

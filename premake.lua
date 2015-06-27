@@ -45,3 +45,6 @@ project "tests"
    filter "configurations:Release"
       defines { "NDEBUG" }
       optimize "On"
+
+
+

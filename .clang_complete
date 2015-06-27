@@ -1,0 +1,3 @@
+-Iinclude
+-Ivendor/googletest/include
+-Ivendor/googletest

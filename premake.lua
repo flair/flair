@@ -6,7 +6,8 @@ solution "flair"
          ["CLANG_CXX_LIBRARY"] = "libc++"
       }
    filter { "action:gmake*" }
-      buildoptions { "-std=c++11" }
+      filter "files:**.cc"
+         buildoptions { "-std=c++11" }
 
    filter "configurations:Debug"
       defines { "DEBUG" }

@@ -97,7 +97,7 @@ filter { "action:gmake*" }
 
    links { "m", "pthread", "dl", "rt" }
 
-   defines { "_LARGEFILE_SOURCE", "_FILE_OFFSET_BITS=64", "_POSIX_C_SOURCE=200112" }
+   defines { "_LARGEFILE_SOURCE", "_FILE_OFFSET_BITS=64", "_POSIX_C_SOURCE=200112L", "_XOPEN_SOURCE=700" }
 
 
 

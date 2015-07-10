@@ -92,7 +92,6 @@ filter { "action:gmake*" }
       "../vendor/libuv/src/unix/linux-inotify.c",
       "../vendor/libuv/src/unix/linux-syscalls.c",
       "../vendor/libuv/src/unix/linux-syscalls.h",
-
    }
 
    links { "m", "pthread", "dl", "rt" }
@@ -140,5 +139,6 @@ filter { "action:msvc*" }
    links { "-ladvapi32", "-liphlpapi", "-lpsapi", "-lshell32", "-luserenv", "-lws2_32" }
 
    defines { "_WIN32_WINNT=0x0600", "_GNU_SOURCE", "_CRT_SECURE_NO_WARNINGS" }
+
 
 filter { }

@@ -99,9 +99,43 @@ filter { "action:gmake*" }
 
    defines { "_LARGEFILE_SOURCE", "_FILE_OFFSET_BITS=64", "_POSIX_C_SOURCE=200112", "_GNU_SOURCE" }
 
+filter { "action:msvc*" }
+   files {
+      "../vendor/libuv/include/uv-win.h",
+      "../vendor/libuv/src/win/async.c",
+      "../vendor/libuv/src/win/atomicops-inl.h",
+      "../vendor/libuv/src/win/core.c",
+      "../vendor/libuv/src/win/dl.c",
+      "../vendor/libuv/src/win/error.c",
+      "../vendor/libuv/src/win/fs.c",
+      "../vendor/libuv/src/win/fs-event.c",
+      "../vendor/libuv/src/win/getaddrinfo.c",
+      "../vendor/libuv/src/win/getnameinfo.c",
+      "../vendor/libuv/src/win/handle.c",
+      "../vendor/libuv/src/win/handle-inl.h",
+      "../vendor/libuv/src/win/internal.h",
+      "../vendor/libuv/src/win/loop-watcher.c",
+      "../vendor/libuv/src/win/pipe.c",
+      "../vendor/libuv/src/win/thread.c",
+      "../vendor/libuv/src/win/poll.c",
+      "../vendor/libuv/src/win/process.c",
+      "../vendor/libuv/src/win/process-stdio.c",
+      "../vendor/libuv/src/win/req.c",
+      "../vendor/libuv/src/win/req-inl.h",
+      "../vendor/libuv/src/win/signal.c",
+      "../vendor/libuv/src/win/stream.c",
+      "../vendor/libuv/src/win/stream-inl.h",
+      "../vendor/libuv/src/win/tcp.c",
+      "../vendor/libuv/src/win/tty.c",
+      "../vendor/libuv/src/win/timer.c",
+      "../vendor/libuv/src/win/udp.c",
+      "../vendor/libuv/src/win/util.c",
+      "../vendor/libuv/src/win/winapi.c",
+      "../vendor/libuv/src/win/winapi.h",
+      "../vendor/libuv/src/win/winsock.c",
+      "../vendor/libuv/src/win/winsock.h"
+   }
 
+   links { "-ladvapi32", "-liphlpapi", "-lpsapi", "-lshell32", "-luserenv", "-lws2_32" }
 
-
-
-
-
+   defines { "_WIN32_WINNT=0x0600", "_GNU_SOURCE", "_CRT_SECURE_NO_WARNINGS" }

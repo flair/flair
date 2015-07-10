@@ -99,6 +99,7 @@ filter { "action:gmake*" }
 
    defines { "_LARGEFILE_SOURCE", "_FILE_OFFSET_BITS=64", "_POSIX_C_SOURCE=200112", "_GNU_SOURCE" }
 
+
 filter { "action:msvc*" }
    files {
       "../vendor/libuv/include/uv-win.h",

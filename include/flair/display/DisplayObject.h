@@ -5,6 +5,7 @@
 #include <string>
 
 #include "flair/Object.h"
+#include "flair/events/EventDispatcher.h"
 #include "flair/display/RenderSupport.h"
 
 #include "flair/geom/Matrix.h"
@@ -17,7 +18,7 @@ namespace flair {
       class Stage;
       class DisplayObjectContainer;
       
-      class DisplayObject : public Object
+      class DisplayObject : public events::EventDispatcher
       {
          friend class DisplayObjectContainer;
          

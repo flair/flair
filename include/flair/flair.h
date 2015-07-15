@@ -37,12 +37,22 @@ namespace {
 namespace flair {
    
    template<typename T, typename... Ts>
-   std::shared_ptr<T> create(Ts&&... params)
+   std::shared_ptr<T> create(Ts... params)
    {
       static_assert(std::is_base_of<Object, T>::value, "Class must inherit from flair::Object to instantiate");
 
       auto ptr = std::shared_ptr<T>(new T(std::forward<Ts>(params)...));
-      std::static_pointer_cast<Object>(ptr)->_instance = std::weak_ptr<T>(ptr);
+      ptr->_instance = std::weak_ptr<T>(ptr);
+      return ptr;
+   }
+   
+   template<typename T>
+   std::shared_ptr<T> create()
+   {
+      static_assert(std::is_base_of<Object, T>::value, "Class must inherit from flair::Object to instantiate");
+      
+      auto ptr = std::shared_ptr<T>(new T());
+      ptr->_instance = std::weak_ptr<T>(ptr);
       return ptr;
    }
    

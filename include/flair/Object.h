@@ -24,9 +24,9 @@ namespace flair {
    
       
    // Internal
-   private:
-      std::weak_ptr<Object> _instance;
    protected:
+      std::weak_ptr<Object> _instance;
+      
       template<typename T>
       std::shared_ptr<T> instance() const { return std::static_pointer_cast<T>(_instance.lock()); }
    };

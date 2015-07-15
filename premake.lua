@@ -21,7 +21,7 @@ project "flair"
    language "C++"
    targetdir "bin/%{cfg.buildcfg}"
 
-   includedirs { "include", "src", "vendor/libuv/include" }
+   includedirs { "include", "src" }
 
    files { "include/**.h", "src/**.h", "src/**.cc" }
 

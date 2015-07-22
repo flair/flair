@@ -40,6 +40,10 @@ namespace flair {
          std::shared_ptr<DisplayObject> removeChildAt(int index);
          void removeChildren(int beginIndex = 0, int endIndex = std::numeric_limits<int>::max());
          
+      // Internal
+      public:
+         virtual void tick(float deltaSeconds);
+         
       protected:
          std::vector<std::shared_ptr<DisplayObject>> _children;
       };

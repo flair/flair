@@ -54,8 +54,8 @@ namespace flair {
          
          std::shared_ptr<Stage> stage() const;
          
-         std::shared_ptr<DisplayObjectContainer> root() const;
-         std::shared_ptr<DisplayObjectContainer> parent() const;
+         const std::shared_ptr<DisplayObjectContainer> root() const;
+         const std::shared_ptr<DisplayObjectContainer> parent() const;
          
          flair::geom::Matrix transformationMatrix() const;
          flair::geom::Matrix transformationMatrix(flair::geom::Matrix m);

@@ -54,7 +54,7 @@ namespace flair {
                _children.insert(_children.begin() + index, child);
             }
 
-            child->setParent(instance<DisplayObjectContainer>());
+            child->setParent(std::dynamic_pointer_cast<DisplayObjectContainer>(shared_from_this()));
             //child.dispatchEventWith(Event.ADDED, true);
 
             if (stage())
@@ -148,6 +148,14 @@ namespace flair {
          
          for (int i = beginIndex; i <= endIndex; ++i) {
             removeChildAt(beginIndex);
+         }
+      }
+      
+      void DisplayObjectContainer::tick(float deltaSeconds)
+      {
+         for (auto child : _children) {
+            auto animated = std::dynamic_pointer_cast<DisplayObjectContainer>(child);
+            if (animated) animated->tick(deltaSeconds);
          }
       }
       

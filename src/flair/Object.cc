@@ -4,7 +4,7 @@ namespace flair {
    
    Object::Object()
    {
-      
+      _shared = std::shared_ptr<Object>(this);
    }
 
    Object::~Object()

@@ -9,7 +9,7 @@ namespace flair {
          
       }
       
-      void EventDispatcher::addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture, int priority, bool useWeakReference)
+      void EventDispatcher::addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture, int priority)
       {
          listeners.insert(std::make_pair(type, listener));
       }

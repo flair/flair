@@ -38,6 +38,7 @@ namespace flair {
 
          while (!self->quit) {
             uv_run(self->uv, UV_RUN_ONCE);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
          }
 
          uv_loop_close(self->uv);

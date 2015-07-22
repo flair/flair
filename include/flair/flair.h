@@ -36,24 +36,38 @@ namespace {
 
 namespace flair {
    
+   struct allocator {
+      template<typename T>
+      static std::shared_ptr<T> make_shared()
+      {
+         auto ptr = new T();
+         auto sharedPtr = std::static_pointer_cast<T>(static_cast<Object*>(ptr)->_shared);
+         static_cast<Object*>(ptr)->_shared = nullptr;
+         return sharedPtr;
+      };
+      
+      template<typename T, typename... Ts>
+      static std::shared_ptr<T> make_shared(Ts... params)
+      {
+         auto ptr = new T(std::forward<Ts>(params)...);
+         auto sharedPtr = std::static_pointer_cast<T>(static_cast<Object*>(ptr)->_shared);
+         static_cast<Object*>(ptr)->_shared = nullptr;
+         return sharedPtr;
+      };
+   };
+   
    template<typename T, typename... Ts>
-   std::shared_ptr<T> create(Ts... params)
+   std::shared_ptr<T> make_shared(Ts... params)
    {
       static_assert(std::is_base_of<Object, T>::value, "Class must inherit from flair::Object to instantiate");
-
-      auto ptr = std::shared_ptr<T>(new T(std::forward<Ts>(params)...));
-      ptr->_instance = std::weak_ptr<T>(ptr);
-      return ptr;
+      return allocator::make_shared<T>(std::forward<Ts>(params)...);
    }
    
    template<typename T>
-   std::shared_ptr<T> create()
+   std::shared_ptr<T> make_shared()
    {
       static_assert(std::is_base_of<Object, T>::value, "Class must inherit from flair::Object to instantiate");
-      
-      auto ptr = std::shared_ptr<T>(new T());
-      ptr->_instance = std::weak_ptr<T>(ptr);
-      return ptr;
+      return allocator::make_shared<T>();
    }
    
    template <typename... Args>

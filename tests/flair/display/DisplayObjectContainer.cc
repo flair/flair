@@ -19,8 +19,8 @@ namespace {
    
    TEST_F(DisplayObjectContainerTest, AddChild)
    {
-      auto image = flair::create<Image>();
-      auto stage = flair::create<Stage>();
+      auto image = flair::make_shared<Image>();
+      auto stage = flair::make_shared<Stage>();
       
       auto child = stage->addChild(image);
       EXPECT_EQ(child->parent(), stage);
@@ -29,8 +29,8 @@ namespace {
    
    TEST_F(DisplayObjectContainerTest, Contains)
    {
-      auto image = flair::create<Image>();
-      auto stage = flair::create<Stage>();
+      auto image = flair::make_shared<Image>();
+      auto stage = flair::make_shared<Stage>();
       
       auto child = stage->addChild(image);
       EXPECT_TRUE(stage->contains(child));
@@ -40,7 +40,7 @@ namespace {
    {
       class CustomStage : public Stage
       {
-         friend std::shared_ptr<CustomStage> flair::create<CustomStage>();
+         friend flair::allocator;
          
       protected:
          CustomStage() : Stage() {};
@@ -49,22 +49,12 @@ namespace {
          virtual ~CustomStage() {}
       };
       
-      auto image = flair::create<Image>();
-      auto stage = flair::create<CustomStage>();
-      auto sprite = flair::create<Sprite>();
+      auto image = flair::make_shared<Image>();
+      auto stage = flair::make_shared<CustomStage>();
+      auto sprite = flair::make_shared<Sprite>();
       
       auto child = stage->addChild(image);
       EXPECT_TRUE(stage->contains(child));
       
-   }
-   
-   TEST_F(DisplayObjectContainerTest, trace)
-   {
-      auto image = flair::create<Image>();
-      auto sprite = flair::create<Sprite>();
-      
-      auto object = std::shared_ptr<flair::Object>(image);
-      
-      flair::trace("Testing the trace command", "with", image);
    }
 }

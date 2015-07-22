@@ -6,16 +6,17 @@
 
 namespace flair {
    
-   class Object
+   struct allocator;
+   
+   class Object : public std::enable_shared_from_this<Object>
    {
-      template<typename T, typename... Ts>
-      friend std::shared_ptr<T> create(Ts&&... params);
+      friend class flair::allocator;
       
    protected:
       Object();
       
    public:
-      virtual ~Object() = 0;
+      virtual ~Object();
    
       
    // Methods
@@ -24,11 +25,15 @@ namespace flair {
    
       
    // Internal
-   protected:
-      std::weak_ptr<Object> _instance;
+   private:
+      std::shared_ptr<Object> _shared;
       
-      template<typename T>
-      std::shared_ptr<T> instance() const { return std::static_pointer_cast<T>(_instance.lock()); }
+   protected:
+      template<class T>
+      std::shared_ptr<T> shared() const
+      {
+         return std::const_pointer_cast<T>(std::dynamic_pointer_cast<const T>(shared_from_this()));
+      }
    };
    
 }

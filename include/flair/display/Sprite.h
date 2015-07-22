@@ -9,7 +9,7 @@ namespace flair {
       
       class Sprite : public DisplayObjectContainer
       {
-         friend std::shared_ptr<Sprite> flair::create<Sprite>();
+         friend class flair::allocator;
          
       protected:
          Sprite();

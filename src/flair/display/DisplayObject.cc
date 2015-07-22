@@ -96,9 +96,9 @@ namespace flair {
          return std::dynamic_pointer_cast<Stage>(root());
       }
       
-      std::shared_ptr<DisplayObjectContainer> DisplayObject::root() const
+      const std::shared_ptr<DisplayObjectContainer> DisplayObject::root() const
       {
-         std::shared_ptr<DisplayObject> currentObject = instance<DisplayObject>();
+         std::shared_ptr<DisplayObject> currentObject = std::const_pointer_cast<DisplayObject>(std::dynamic_pointer_cast<const DisplayObject>(shared_from_this()));
          while (currentObject->parent())
          {
             auto root = std::dynamic_pointer_cast<Stage>(currentObject->parent());
@@ -113,7 +113,7 @@ namespace flair {
          return std::shared_ptr<DisplayObjectContainer>();
       }
       
-      std::shared_ptr<DisplayObjectContainer> DisplayObject::parent() const
+      const std::shared_ptr<DisplayObjectContainer> DisplayObject::parent() const
       {
             return _parent.lock();
       }

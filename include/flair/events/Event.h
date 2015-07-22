@@ -12,9 +12,7 @@ namespace flair {
       
       class Event : public Object
       {
-         friend std::shared_ptr<Event> flair::create<Event>(const char*, bool, bool);
-         friend std::shared_ptr<Event> flair::create<Event>(const char*, bool);
-         friend std::shared_ptr<Event> flair::create<Event>(const char*);
+         friend class flair::allocator;
          
       protected:
          Event(const char* type, bool bubbbles = false, bool cancelable = false);

@@ -1,3 +1,4 @@
 -Iinclude
 -Ivendor/googletest/include
 -Ivendor/googletest
+-Ivendor/libuv/include

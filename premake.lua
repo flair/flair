@@ -39,7 +39,7 @@ project "tests"
    links { "flair" }
 
    filter { "action:gmake*" }
-      links "pthread"
+      links { "dl", "rt", "pthread" }
 
 
 

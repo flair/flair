@@ -17,7 +17,7 @@ namespace flair {
          DisplayObjectContainer();
          
       public:
-         virtual ~DisplayObjectContainer();
+         virtual ~DisplayObjectContainer() = 0;
          
       // Properties
       public:

@@ -41,9 +41,9 @@ namespace flair {
          return _alpha = alpha;
       }
       
-      const Rectangle* DisplayObject::bounds() const
+      const Rectangle DisplayObject::bounds() const
       {
-         return &_bounds;
+         return _bounds;
       }
       
       bool DisplayObject::hasVisibleArea() const
@@ -208,19 +208,19 @@ namespace flair {
          return _visible = visible;
       }
       
-      Rectangle DisplayObject::getBounds(std::shared_ptr<DisplayObject> targetSpace, Rectangle* result) const
+      Rectangle DisplayObject::getBounds(std::shared_ptr<DisplayObject> targetSpace) const
       {
          Rectangle r;
          return r;
       }
       
-      Matrix DisplayObject::getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace, Matrix* result) const
+      Matrix DisplayObject::getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace) const
       {
          Matrix m;
          return m;
       }
       
-      Point DisplayObject::globalToLocal(Point localPoint, Point* result) const
+      Point DisplayObject::globalToLocal(Point localPoint) const
       {
          Point p;
          return p;

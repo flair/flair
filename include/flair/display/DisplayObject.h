@@ -37,7 +37,7 @@ namespace flair {
          float alpha() const;
          float alpha(float alpha);
          
-         const flair::geom::Rectangle* bounds() const;
+         const flair::geom::Rectangle bounds() const;
          bool hasVisibleArea() const;
          
          float height() const;
@@ -87,11 +87,11 @@ namespace flair {
          
       // Methods
       public:
-         flair::geom::Rectangle getBounds(std::shared_ptr<DisplayObject> targetSpace, flair::geom::Rectangle* result = 0) const;
+         flair::geom::Rectangle getBounds(std::shared_ptr<DisplayObject> targetSpace) const;
          
-         flair::geom::Matrix getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace, flair::geom::Matrix* result = 0) const;
+         flair::geom::Matrix getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace) const;
          
-         flair::geom::Point globalToLocal(flair::geom::Point localPoint, flair::geom::Point* result = 0) const;
+         flair::geom::Point globalToLocal(flair::geom::Point localPoint) const;
          
          std::shared_ptr<DisplayObject> hitTest(flair::geom::Point localPoint, bool forTouch = false) const;
          

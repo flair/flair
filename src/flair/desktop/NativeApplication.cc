@@ -1,16 +1,19 @@
 #include "flair/desktop/NativeApplication.h"
+#include "flair/internal/EventLoop.h"
 
 namespace flair {
    namespace desktop {
       
+      using namespace flair::internal;
+      
       NativeApplication::NativeApplication() : _autoExit(true), _executeInBackground(false), _idleThreshold(300), _systemIdleMode(SystemIdleMode::NORMAL)
       {
-         
+         eventLoop = new EventLoop();
       }
       
       NativeApplication::~NativeApplication()
       {
-         
+         delete eventLoop;
       }
       
       std::string NativeApplication::applicationDescriptor()

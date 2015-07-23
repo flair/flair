@@ -5,6 +5,11 @@
 #include "flair/events/EventDispatcher.h"
 
 namespace flair {
+   
+   namespace internal {
+      class EventLoop;
+   }
+   
    namespace desktop {
       
       enum class SystemIdleMode
@@ -129,6 +134,7 @@ namespace flair {
          
       private:
          std::shared_ptr<flair::events::EventDispatcher> eventDispatcher;
+         internal::EventLoop *eventLoop;
       };
       
    }

@@ -29,7 +29,7 @@ namespace flair {
          ConcurrentQueue<int> pendingOperations;
          
       private:
-         static void eventLoop(EventLoop *self);
+         void eventLoop();
          
          uv_async_t asyncDequeueHandle;
          static void asyncDequeue(uv_async_t *handle);

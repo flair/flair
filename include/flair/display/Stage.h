@@ -5,10 +5,6 @@
 #include "flair/display/DisplayObjectContainer.h"
 
 namespace flair {
-   namespace internal {
-      class EventLoop;
-   }
-   
    namespace display {
       
       class Stage : public DisplayObjectContainer
@@ -26,11 +22,7 @@ namespace flair {
          
       // Internal
       public:
-         void tick(float deltaSeconds) override;
-         
-      protected:
-         internal::EventLoop *_eventLoop;
-         
+         void tick(float deltaSeconds) override;   
       };
    }
 }

@@ -8,7 +8,7 @@ namespace flair {
 
       EventLoop::EventLoop() : uv(nullptr), ready(false), quit(false), pendingOperations(128)
       {
-         thread = std::thread(eventLoop, this);
+         thread = std::thread([this]() { this->eventLoop(); });
       }
 
       EventLoop::~EventLoop()
@@ -28,23 +28,23 @@ namespace flair {
          if (ready) uv_async_send(&asyncDequeueHandle);
       }
 
-      void EventLoop::eventLoop(EventLoop *self)
+      void EventLoop::eventLoop()
       {
-         self->uv = (uv_loop_t*)std::malloc(sizeof(uv_loop_t));
-         uv_loop_init(self->uv);
+         uv = (uv_loop_t*)std::malloc(sizeof(uv_loop_t));
+         uv_loop_init(uv);
          
-         uv_async_init(self->uv, &self->asyncNullHandle, nullptr);
-         uv_async_init(self->uv, &self->asyncDequeueHandle, EventLoop::asyncDequeue);
+         uv_async_init(uv, &asyncNullHandle, nullptr);
+         uv_async_init(uv, &asyncDequeueHandle, EventLoop::asyncDequeue);
 
-         self->ready = true;
-         while (!self->quit) {
-            uv_run(self->uv, UV_RUN_ONCE);
+         ready = true;
+         while (!quit) {
+            uv_run(uv, UV_RUN_ONCE);
          }
-         self->ready = false;
+         ready = false;
 
-         uv_loop_close(self->uv);
-         std::free(self->uv);
-         self->uv = nullptr;
+         uv_loop_close(uv);
+         std::free(uv);
+         uv = nullptr;
       }
       
       void EventLoop::asyncDequeue(uv_async_t *handle)

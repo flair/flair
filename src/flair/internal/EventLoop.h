@@ -18,8 +18,8 @@ namespace flair {
          
          void Enqueue();
          
-         
-      private:
+      protected:
+         std::atomic_bool ready;
          std::atomic_bool quit;
          std::thread thread;
          

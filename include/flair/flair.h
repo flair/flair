@@ -76,6 +76,9 @@ namespace flair {
       TraceArgs argArray[] = {args...};
       doTrace(argArray, sizeof...(Args));
    }
+   
+   namespace display { class Stage; }
+   void run(std::shared_ptr<flair::display::Stage> stage, int width = -1, int height = -1, bool fullscreen = false);
 }
 
 #endif

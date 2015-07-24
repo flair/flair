@@ -757,8 +757,9 @@ namespace flair {
       return true;
    }
 }
-         
-/* The code in this file is based on Dropbox, Inc's Json11 (https://github.com/dropbox/json11) and is used under the following license.
+
+/* The code in this file is based on Dropbox, Inc's Json11
+ * (https://github.com/dropbox/json11) and is used under the following license.
  *
  * Copyright (c) 2013 Dropbox, Inc.
  *

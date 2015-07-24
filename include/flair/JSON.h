@@ -14,10 +14,10 @@
 #endif
 
 namespace flair {
-   
+
    class JSONValue;
 
-   class JSON 
+   class JSON
    {
    public:
       // Types
@@ -140,7 +140,8 @@ namespace flair {
    };
 }
 
-/* The code in this file is based on Dropbox, Inc's Json11 (https://github.com/dropbox/json11) and is used under the following license.
+/* The code in this file is based on Dropbox, Inc's Json11
+ * (https://github.com/dropbox/json11) and is used under the following license.
  *
  * Copyright (c) 2013 Dropbox, Inc.
  *

@@ -1,7 +1,9 @@
 #ifndef flair_flair_h
 #define flair_flair_h
 
+#include <cstdint>
 #include <type_traits>
+#include <memory>
 #include <string>
 #include <iostream>
 

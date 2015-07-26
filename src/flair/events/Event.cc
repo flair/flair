@@ -3,7 +3,7 @@
 namespace flair {
    namespace events {
       
-      Event::Event(const char* type, bool bubbbles, bool cancelable) : _type(type), _bubbles(bubbbles), _cancelable(cancelable)
+      Event::Event(const char* type, bool bubbles, bool cancelable) : _type(type), _bubbles(bubbles), _cancelable(cancelable)
       {
          
       }
@@ -41,6 +41,11 @@ namespace flair {
       std::string Event::type() const
       {
          return _type;
+      }
+      
+      std::shared_ptr<Event> Event::clone()
+      {
+         return flair::make_shared<Event>(_type.c_str(), _bubbles, _cancelable);
       }
       
       std::string Event::toString() const

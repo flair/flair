@@ -15,11 +15,12 @@ namespace flair {
          friend class flair::allocator;
          
       protected:
-         Event(const char* type, bool bubbbles = false, bool cancelable = false);
+         Event(const char * type, bool bubbles = false, bool cancelable = false);
          
       public:
          virtual ~Event();
-         
+      
+      
       // Events
       public:
          static const char* ACTIVATE;
@@ -80,6 +81,7 @@ namespace flair {
          static const char* VIDEO_FRAME;
          static const char* WORKER_STATE;
          
+         
       // Properties
       public:
          bool bubbles() const;
@@ -93,10 +95,11 @@ namespace flair {
          std::shared_ptr<Object> target() const;
 
          std::string type() const;
-         
+      
+      
       // Methods
       public:
-         std::shared_ptr<Event> clone();
+         virtual std::shared_ptr<Event> clone();
          
          std::string formatToString(std::string className, ...) const;
          
@@ -109,7 +112,8 @@ namespace flair {
          void stopPropagation();
          
          std::string toString() const override;
-         
+      
+      
       protected:
          bool _bubbles;
          bool _cancelable;

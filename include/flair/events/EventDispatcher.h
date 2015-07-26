@@ -5,7 +5,7 @@
 #include "flair/Object.h"
 #include "flair/events/IEventDispatcher.h"
 
-#include <unordered_map>
+#include <map>
 #include <functional>
 
 namespace flair {
@@ -22,10 +22,10 @@ namespace flair {
          virtual ~EventDispatcher();
          
       public:
-         void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int priority = 0) override;
+         void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int32_t priority = 0) override;
          
          template <class T>
-         void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<Event>), std::shared_ptr<T> const& instance, bool useCapture = false, int priority = 0, bool weakReference = false)
+         void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<Event>), std::shared_ptr<T> const& instance, bool useCapture = false, int32_t priority = 0, bool weakReference = false)
          {
             std::function<void(std::shared_ptr<Event>)> delegate;
             
@@ -42,7 +42,7 @@ namespace flair {
          }
          
          template <class T, typename std::enable_if<std::is_base_of<Object, T>::value>::type* = nullptr>
-         void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<Event>), T* self, bool useCapture = false, int priority = 0, bool weakReference = false)
+         void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<Event>), T* self, bool useCapture = false, int32_t priority = 0, bool weakReference = false)
          {
             addEventListener(type, listener, self->template shared<T>(), useCapture, priority, weakReference);
          }
@@ -56,7 +56,20 @@ namespace flair {
          bool willTrigger(std::string type) override;
          
       private:
-         std::unordered_multimap<std::string, std::function<void(std::shared_ptr<Event>)>> listeners;
+         struct EventListener
+         {
+            EventListener(std::function<void(std::shared_ptr<Event>)>&& callback, bool useCapture, int32_t priority)
+               : callback(callback), useCapture(useCapture), priority(priority) {};
+            bool operator <(const EventListener& rhs) { return rhs.priority >= priority; }
+            
+            std::function<void(std::shared_ptr<Event>)> callback;
+            bool useCapture;
+            int32_t priority;
+            
+         };
+         std::multimap<std::string, EventListener> listeners;
+         
+         bool isTarget(EventListener const& targetListener, std::function<void(std::shared_ptr<Event>)> const& listener, bool useCapture);
       };
       
       

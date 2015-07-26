@@ -13,7 +13,7 @@ namespace flair {
       {
          // Methods
       public:
-         virtual void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int priority = 0) = 0;
+         virtual void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int32_t priority = 0) = 0;
          
          virtual bool dispatchEvent(std::shared_ptr<Event> event) = 0;
          

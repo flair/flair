@@ -117,6 +117,8 @@ filter { "action:gmake*" }
     "../vendor/sdl/src/joystick/linux/*.c",
     "../vendor/sdl/src/power/linux/*.h",
     "../vendor/sdl/src/power/linux/*.c",
+    "../vendor/sdl/src/render/opengl/*.h",
+    "../vendor/sdl/src/render/opengl/*.c",
     "../vendor/sdl/src/thread/pthread/*.h",
     "../vendor/sdl/src/thread/pthread/*.c",
     "../vendor/sdl/src/timer/unix/*.h",

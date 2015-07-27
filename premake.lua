@@ -79,7 +79,7 @@ project "tests"
    links { "flair" }
 
    filter { "action:gmake*" }
-      links { "dl", "rt", "pthread" }
+      links { "dl", "m", "rt", "pthread" }
 
 project "reference"
    kind "WindowedApp"
@@ -106,4 +106,4 @@ project "reference"
       }
 
    filter { "action:gmake*" }
-      links { "dl", "rt", "pthread" }
+      links { "dl", "m", "rt", "pthread" }

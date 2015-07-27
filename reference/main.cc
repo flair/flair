@@ -43,7 +43,7 @@ public:
    void onKeyDown(std::shared_ptr<Event> e)
    {
       auto keyboardEvent = std::dynamic_pointer_cast<KeyboardEvent>(e);
-      std::cout << "On Key Down: " << keyboardEvent->keyCode() << "with shift: " << keyboardEvent->shiftKey() << std::endl;
+      std::cout << "On Key Down: " << keyboardEvent->keyCode() << " with shift: " << keyboardEvent->shiftKey() << std::endl;
       
    }
 };

@@ -14,7 +14,7 @@ before_install:
 
 install: ./build/linux
 
-script: make all && ./bin/Debug/tests
+script: make tests && ./bin/Debug/tests
 
 branches:
    only:

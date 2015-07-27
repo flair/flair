@@ -9,7 +9,7 @@ namespace flair {
      public:
         
         // KeyCodes
-        static enum {
+        enum {
            LEFT = 37,
            UP = 38,
            RIGHT = 39,

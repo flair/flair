@@ -1,5 +1,7 @@
 #include "flair/internal/services/sdl/KeyboardService.h"
 
+#include <cstring>
+
 namespace flair {
 namespace internal {
 namespace services {

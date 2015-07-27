@@ -26,6 +26,19 @@ addons:
       - gcc-5
       - g++-5
       - clang-3.6
+      - libasound2-dev
+      - libpulse-dev
+      - libaudio-dev
+      - libx11-dev
+      - libxext-dev
+      - libxrandr-dev
+      - libxcursor-dev
+      - libxi-dev
+      - libxinerama-dev
+      - libxxf86vm-dev
+      - libxss-dev
+      - libgl1-mesa-dev
+      - libesd0-dev
 
 notifications:
    email: false

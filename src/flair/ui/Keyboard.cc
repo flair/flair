@@ -8,22 +8,24 @@ namespace flair {
      
      bool Keyboard::capsLock()
      {
-        ServiceProvider.keyboardService;
+        return ServiceProvider.keyboardService->capsLock();
      }
      
      bool Keyboard::hasVirtualKeyboard()
      {
-        ServiceProvider.keyboardService;
+        // TODO: Mobile Virtual Keyboards
+        return false;
      }
      
      bool Keyboard::numLock()
      {
-        ServiceProvider.keyboardService;
+        return ServiceProvider.keyboardService->numLock();
      }
      
-     int Keyboard::physicalKeyboardType()
+     KeyboardType Keyboard::physicalKeyboardType()
      {
-        ServiceProvider.keyboardService;
+        // TODO: Keyboard type?
+        return KeyboardType::ALPHANUMERIC;
      }
     
   }

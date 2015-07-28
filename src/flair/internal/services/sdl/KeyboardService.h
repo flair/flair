@@ -20,6 +20,10 @@ namespace sdl {
       
       void activeKeys(std::function<void(uint32_t keyCode, int keyState)> callback) override;
       
+      bool capsLock() override;
+      
+      bool numLock() override;
+      
       void clear() override;
       
    protected:

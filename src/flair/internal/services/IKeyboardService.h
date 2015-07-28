@@ -19,6 +19,10 @@ namespace flair {
             
             virtual void activeKeys(std::function<void(uint32_t keyCode, int keyState)> callback) = 0;
             
+            virtual bool capsLock() = 0;
+            
+            virtual bool numLock() = 0;
+            
             virtual void clear() = 0;
          };
          

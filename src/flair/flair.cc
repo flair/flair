@@ -16,7 +16,7 @@
 
 #include <chrono>
 
-static flair::internal::services::Service ServiceProvider;
+flair::internal::services::Service ServiceProvider;
 
 
 namespace flair {

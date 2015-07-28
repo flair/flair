@@ -1,6 +1,7 @@
 #include "flair/internal/services/sdl/KeyboardService.h"
 #include "flair/ui/Keyboard.h"
 
+#include "SDL_keyboard.h"
 #include "SDL_keycode.h"
 #include <cstring>
 
@@ -76,6 +77,23 @@ namespace {
          case SDLK_y: return Keyboard::Y;
          case SDLK_z: return Keyboard::Z;
             
+         case SDLK_KP_0: return Keyboard::NUMPAD_0;
+         case SDLK_KP_1: return Keyboard::NUMPAD_1;
+         case SDLK_KP_2: return Keyboard::NUMPAD_2;
+         case SDLK_KP_3: return Keyboard::NUMPAD_3;
+         case SDLK_KP_4: return Keyboard::NUMPAD_4;
+         case SDLK_KP_5: return Keyboard::NUMPAD_5;
+         case SDLK_KP_6: return Keyboard::NUMPAD_6;
+         case SDLK_KP_7: return Keyboard::NUMPAD_7;
+         case SDLK_KP_8: return Keyboard::NUMPAD_8;
+         case SDLK_KP_9: return Keyboard::NUMPAD_9;
+         case SDLK_KP_MULTIPLY: return Keyboard::NUMPAD_MULTIPLY;
+         case SDLK_KP_PLUS: return Keyboard::NUMPAD_ADD;
+         case SDLK_KP_ENTER: return Keyboard::NUMPAD_ENTER;
+         case SDLK_KP_MINUS: return Keyboard::NUMPAD_SUBTRACT;
+         case SDLK_KP_PERIOD: return Keyboard::NUMPAD_DECIMAL;
+         case SDLK_KP_DIVIDE: return Keyboard::NUMPAD_DIVIDE;
+            
          case SDLK_F1: return Keyboard::F1;
          case SDLK_F2: return Keyboard::F2;
          case SDLK_F3: return Keyboard::F3;
@@ -150,6 +168,16 @@ namespace sdl {
       {
          if (_keys[i] != 0) callback(i, _keys[i]);
       }
+   }
+   
+   bool KeyboardService::capsLock()
+   {
+      return (SDL_GetModState() & KMOD_CAPS);
+   }
+   
+   bool KeyboardService::numLock()
+   {
+      return (SDL_GetModState() & KMOD_NUM);
    }
    
    void KeyboardService::clear()

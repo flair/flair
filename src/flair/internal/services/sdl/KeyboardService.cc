@@ -183,7 +183,7 @@ namespace sdl {
    void KeyboardService::clear()
    {
       memset(_keys, 0, sizeof(_keys));
-      memset(&_modifiers, 9, sizeof(_modifiers));
+      memset(&_modifiers, 0, sizeof(_modifiers));
    }
    
 }}}}

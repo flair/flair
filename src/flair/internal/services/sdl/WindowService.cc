@@ -74,9 +74,10 @@ namespace sdl {
    void WindowService::create(std::string title, flair::geom::Rectangle const& bounds, uint32_t flags, bool root)
    {
       uint32_t sdlFlags = 0;
-      if (flags & WindowServiceFlags::FULLSCREEN) sdlFlags |= SDL_WINDOW_FULLSCREEN;
-      if (flags & WindowServiceFlags::HIGH_DPI) sdlFlags |= SDL_WINDOW_ALLOW_HIGHDPI;
-      if (flags & WindowServiceFlags::MOUSE_CAPTURE) sdlFlags |= SDL_WINDOW_MOUSE_CAPTURE;
+      if ((flags & WindowServiceFlags::FULLSCREEN) == WindowServiceFlags::FULLSCREEN) sdlFlags |= SDL_WINDOW_FULLSCREEN;
+      if ((flags & WindowServiceFlags::HIGH_DPI) == WindowServiceFlags::HIGH_DPI) sdlFlags |= SDL_WINDOW_ALLOW_HIGHDPI;
+      if ((flags & WindowServiceFlags::RESIZEABLE) == WindowServiceFlags::RESIZEABLE) sdlFlags |= SDL_WINDOW_RESIZABLE;
+      if ((flags & WindowServiceFlags::MOUSE_CAPTURE) == WindowServiceFlags::MOUSE_CAPTURE) sdlFlags |= SDL_WINDOW_MOUSE_CAPTURE;
       
       int x = bounds.x();
       int y = bounds.y();
@@ -111,6 +112,7 @@ namespace sdl {
          
          width = mode.w;
          height = mode.w;
+         _fullscreen = true;
       }
       
       _rootWindow = root;
@@ -167,12 +169,20 @@ namespace sdl {
    
    bool WindowService::enterFullscreen(int width, int height, bool useClosestResolution)
    {
-      return false;
+      _fullscreen = true;
+      
+      // TODO: Mode changes
+      
+      Uint32 flags = (SDL_GetWindowFlags(_window) ^ SDL_WINDOW_FULLSCREEN);
+      int ret = SDL_SetWindowFullscreen(_window, flags);
+      return (ret == 0);
    }
    
    void WindowService::exitFullscreen()
    {
+      if (!_fullscreen) return;
       
+      SDL_SetWindowSize(_window, _bounds.width(), _bounds.height());
    }
    
    void WindowService::pollEvents(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService)
@@ -196,10 +206,6 @@ namespace sdl {
                      (event.key.keysym.mod & KMOD_LGUI) ? -1 : (event.key.keysym.mod & KMOD_RGUI) ? 1 : 0
                   );
                   if (!event.key.repeat) keyboardService->key(event.key.keysym.sym, -1);
-               }
-               
-               if (event.key.keysym.sym == SDLK_ESCAPE) {
-                  _quiting = true;
                }
             } break;
                

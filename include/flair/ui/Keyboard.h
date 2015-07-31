@@ -2,21 +2,35 @@
 #define flair_ui_Keyboard_h
 
 namespace flair {
-  namespace ui {
-     
-     enum class KeyboardType
-     {
+   
+   namespace desktop {
+      class NativeApplication;
+   }
+   
+   namespace internal {
+      namespace services {
+         class IKeyboardService;
+      }
+   }
+   
+   namespace ui {
+
+      enum class KeyboardType
+      {
         NONE,
         ALPHANUMERIC,
         KEYPAD
-     };
+      };
 
-     class Keyboard
-     {
-     public:
+      class Keyboard
+      {
+      public:
+         Keyboard() = delete;
+         Keyboard(Keyboard const&) = delete;
+         Keyboard& operator=(Keyboard const&) = delete;
         
-        // KeyCodes
-        enum {
+         // KeyCodes
+         enum {
            BACKSPACE = 8,
            TAB = 9,
            
@@ -130,23 +144,25 @@ namespace flair {
            QUOTE = 222,
            
            _KEY_COUNT // Internal for sizing the key array
-        };
-      
-     // Properties
-     public:
-        static bool capsLock();
-        
-        static bool hasVirtualKeyboard();
-        
-        static bool numLock();
-        
-        static KeyboardType physicalKeyboardType();
-        
-     private:
-        Keyboard();
+         };
 
-     };
+      // Properties
+      public:
+         static bool capsLock();
+
+         static bool hasVirtualKeyboard();
+
+         static bool numLock();
+
+         static KeyboardType physicalKeyboardType();
+
+      // Internal
+      protected:
+         friend class flair::desktop::NativeApplication;
+         static flair::internal::services::IKeyboardService * keyboardService;
+      };
 
   }
 }
+
 #endif

@@ -20,7 +20,7 @@ namespace sdl {
       
    // Properties
    public:
-      virtual bool rootWindow() override;
+      bool rootWindow() override;
       
       flair::geom::Rectangle bounds() override;
       flair::geom::Rectangle bounds(flair::geom::Rectangle const& value) override;

@@ -19,7 +19,7 @@ namespace flair {
          thread.join();
       }
       
-      void EventLoop::Enqueue()
+      void EventLoop::enqueue()
       {
          int element = rand();
          pendingOperations.enqueue(element);

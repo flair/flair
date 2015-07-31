@@ -16,7 +16,7 @@ namespace flair {
          EventLoop();
          virtual ~EventLoop();
          
-         void Enqueue();
+         void enqueue();
          
       protected:
          std::atomic_bool ready;

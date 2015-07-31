@@ -1,14 +1,17 @@
 #include "flair/ui/Keyboard.h"
-#include "flair/internal/services/Service.h"
+#include "flair/internal/services/IKeyboardService.h"
 
-extern flair::internal::services::Service ServiceProvider;
+#include <cassert>
 
 namespace flair {
   namespace ui {
      
+     flair::internal::services::IKeyboardService * Keyboard::keyboardService = nullptr;
+     
      bool Keyboard::capsLock()
      {
-        return ServiceProvider.keyboardService->capsLock();
+        assert(keyboardService);
+        return keyboardService->capsLock();
      }
      
      bool Keyboard::hasVirtualKeyboard()
@@ -19,7 +22,8 @@ namespace flair {
      
      bool Keyboard::numLock()
      {
-        return ServiceProvider.keyboardService->numLock();
+        assert(keyboardService);
+        return keyboardService->numLock();
      }
      
      KeyboardType Keyboard::physicalKeyboardType()

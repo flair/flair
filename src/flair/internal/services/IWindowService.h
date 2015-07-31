@@ -20,10 +20,10 @@ namespace flair {
             enum {
                FULLSCREEN = 0x01,
                HIGH_DPI = 0x02,
-               RESIZEABLE = 0x03,
-               MINIMIZABLE = 0x04,
-               MAXIMIZEABLE = 0x05,
-               MOUSE_CAPTURE = 0x05
+               RESIZEABLE = 0x04,
+               MINIMIZABLE = 0x08,
+               MAXIMIZEABLE = 0x10,
+               MOUSE_CAPTURE = 0x12
             };
          };
          

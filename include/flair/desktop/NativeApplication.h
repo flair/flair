@@ -1,6 +1,8 @@
 #ifndef flair_desktop_NativeApplication_h
 #define flair_desktop_NativeApplication_h
 
+#include "flair/JSON.h"
+#include "flair/display/Stage.h"
 #include "flair/events/IEventDispatcher.h"
 #include "flair/events/EventDispatcher.h"
 
@@ -8,6 +10,15 @@ namespace flair {
    
    namespace internal {
       class EventLoop;
+      
+      namespace services {
+         class IWindowService;
+         class IRenderService;
+         class IKeyboardService;
+         class IMouseService;
+         class ITouchService;
+         class IGamepadService;
+      }
    }
    
    namespace desktop {
@@ -21,18 +32,18 @@ namespace flair {
       class NativeApplication : public flair::events::IEventDispatcher
       {
       public:
-         static std::shared_ptr<NativeApplication> nativeApplication()
+         static std::shared_ptr<NativeApplication> nativeApplication(flair::JSON applicationDescriptor = nullptr, std::shared_ptr<flair::display::Stage> stage = nullptr)
          {
-            static std::shared_ptr<NativeApplication> instance = std::shared_ptr<NativeApplication>(new NativeApplication());
+            static std::shared_ptr<NativeApplication> instance = std::shared_ptr<NativeApplication>(new NativeApplication(applicationDescriptor, stage));
             return instance;
          }
          
-      protected:
-         NativeApplication();
-         
-      public:
+         NativeApplication(NativeApplication const&) = delete;
+         NativeApplication& operator=(NativeApplication const&) = delete;
          virtual ~NativeApplication();
          
+      protected:
+         NativeApplication(flair::JSON applicationDescriptor, std::shared_ptr<flair::display::Stage> stage);
          
       // Properties
       public:
@@ -86,6 +97,8 @@ namespace flair {
          
          void selectAll();
          
+         void run();
+         
          
       // IEventDispatcher
       public:
@@ -127,14 +140,25 @@ namespace flair {
          }
          
       protected:
+         bool _running;
          bool _autoExit;
          bool _executeInBackground;
          int _idleThreshold;
          SystemIdleMode _systemIdleMode;
+         flair::JSON _applicationDescriptor;
+         std::shared_ptr<flair::display::Stage> _stage;
          
       private:
          std::shared_ptr<flair::events::EventDispatcher> eventDispatcher;
+         
          internal::EventLoop *eventLoop;
+         
+         flair::internal::services::IWindowService * windowService;
+         flair::internal::services::IRenderService * renderService;
+         flair::internal::services::IKeyboardService * keyboardService;
+         flair::internal::services::IMouseService * mouseService;
+         flair::internal::services::ITouchService * touchService;
+         flair::internal::services::IGamepadService * gamepadService;
       };
       
    }

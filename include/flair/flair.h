@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "flair/Object.h"
+#include "flair/JSON.h"
 
 namespace {
    class TraceArgs
@@ -80,7 +81,7 @@ namespace flair {
    }
    
    namespace display { class Stage; }
-   void run(std::shared_ptr<flair::display::Stage> stage, int width = -1, int height = -1, bool fullscreen = false);
+   void run(flair::JSON const& applicationDescriptor, std::shared_ptr<flair::display::Stage> stage);
 }
 
 #endif

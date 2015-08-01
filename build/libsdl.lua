@@ -188,7 +188,7 @@ filter { "action:gmake*" }
     "SDL_VIDEO_OPENGL_GLX=1"
   }
 
-filter { "action:msvc*" }
+filter { "action:vs*" }
   files {
     "../vendor/sdl/src/thread/generic/SDL_syscond.c",
     "../vendor/sdl/src/thread/generic/SDL_sysmutex_c.h",
@@ -241,7 +241,10 @@ filter { "action:msvc*" }
     "SDL_VIDEO_RENDER_D3D=1",
     "SDL_VIDEO_OPENGL=1",
     "SDL_VIDEO_RENDER_OGL=1",
-    "SDL_VIDEO_OPENGL_WGL=1"
+    "SDL_VIDEO_OPENGL_WGL=1",
+    "SDL_VIDEO_RENDER_OGL_ES2=0",
+    "SDL_VIDEO_OPENGL_ES2=0",
+    "SDL_VIDEO_OPENGL_EGL=0"
   }
 
 

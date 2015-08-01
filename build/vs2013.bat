@@ -1,5 +1,3 @@
-script=$0
-curdir="${script%\\*}"
-cd curdir
+cd %~dp0
 
-premake5.exe --file=../premake.lua vs2013
+premake5.exe --file=..\\premake.lua vs2013

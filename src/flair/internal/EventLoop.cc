@@ -6,8 +6,10 @@
 namespace flair {
    namespace internal {
 
-      EventLoop::EventLoop() : uv(nullptr), ready(false), quit(false), pendingOperations(128)
+      EventLoop::EventLoop() : uv(nullptr), pendingOperations(128)
       {
+         ready = false;
+         quit = false;
          thread = std::thread([this]() { this->eventLoop(); });
       }
 
@@ -15,10 +17,10 @@ namespace flair {
       {
          quit = true;
          if (ready) uv_async_send(&asyncNullHandle);
-         
+
          thread.join();
       }
-      
+
       void EventLoop::enqueue()
       {
          int element = rand();
@@ -32,7 +34,7 @@ namespace flair {
       {
          uv = (uv_loop_t*)std::malloc(sizeof(uv_loop_t));
          uv_loop_init(uv);
-         
+
          uv_async_init(uv, &asyncNullHandle, nullptr);
          uv_async_init(uv, &asyncDequeueHandle, EventLoop::asyncDequeue);
 
@@ -46,11 +48,11 @@ namespace flair {
          std::free(uv);
          uv = nullptr;
       }
-      
+
       void EventLoop::asyncDequeue(uv_async_t *handle)
       {
          EventLoop *self = static_cast<EventLoop*>(handle->data);
-         
+
          int result = 0;
          while (self->pendingOperations.try_dequeue(result)) {
             //printf("Dequeued %d\n", result);

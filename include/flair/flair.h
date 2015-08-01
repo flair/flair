@@ -45,7 +45,7 @@ namespace flair {
       {
          auto ptr = new T();
          auto sharedPtr = std::static_pointer_cast<T>(static_cast<Object*>(ptr)->_shared);
-         static_cast<Object*>(ptr)->_shared = nullptr;
+         static_cast<Object*>(ptr)->_shared.reset();
          return sharedPtr;
       };
       
@@ -54,7 +54,7 @@ namespace flair {
       {
          auto ptr = new T(std::forward<Ts>(params)...);
          auto sharedPtr = std::static_pointer_cast<T>(static_cast<Object*>(ptr)->_shared);
-         static_cast<Object*>(ptr)->_shared = nullptr;
+         static_cast<Object*>(ptr)->_shared.reset();
          return sharedPtr;
       };
    };

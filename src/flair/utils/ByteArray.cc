@@ -2,6 +2,7 @@
 
 #include <ios>
 #include <cassert>
+#include <cstring>
 
 namespace {
    bool isBigEndian = *(uint16_t *)"\0\xff" < 0x100;
@@ -55,8 +56,8 @@ namespace utils {
          assert(newByteArray);
          if (!newByteArray) throw std::ios_base::failure("Out of Memory");
          
-         memcpy(newByteArray, _byteArray, _length);
-         memset(&newByteArray[_length], 0, (newLength - _length));
+         std::memcpy(newByteArray, _byteArray, _length);
+         std::memset(&newByteArray[_length], 0, (newLength - _length));
          
          delete[] _byteArray;
          _byteArray = newByteArray;

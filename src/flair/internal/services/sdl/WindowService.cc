@@ -128,7 +128,6 @@ namespace sdl {
       if (!_active) return;
       
       _active = true;
-      _active = true;
       SDL_ShowWindow(_window);
    }
    
@@ -169,19 +168,21 @@ namespace sdl {
    
    bool WindowService::enterFullscreen(int width, int height, bool useClosestResolution)
    {
-      _fullscreen = true;
+      if (_fullscreen) return true;
       
       // TODO: Mode changes
       
       Uint32 flags = (SDL_GetWindowFlags(_window) ^ SDL_WINDOW_FULLSCREEN);
       int ret = SDL_SetWindowFullscreen(_window, flags);
-      return (ret == 0);
+      _fullscreen = (ret == 0);
+      return _fullscreen;
    }
    
    void WindowService::exitFullscreen()
    {
       if (!_fullscreen) return;
       
+      _fullscreen = false;
       SDL_SetWindowSize(_window, _bounds.width(), _bounds.height());
    }
    

@@ -3,12 +3,14 @@
 #include "flair/events/KeyboardEvent.h"
 #include "flair/display/Stage.h"
 #include "flair/ui/Keyboard.h"
+#include "flair/desktop/NativeApplication.h"
 
 using flair::JSON;
 using flair::events::Event;
 using flair::events::KeyboardEvent;
 using flair::display::Stage;
 using flair::ui::Keyboard;
+using flair::desktop::NativeApplication;
 
 
 class GameStage : public Stage
@@ -49,6 +51,12 @@ public:
       std::cout << "On Key Down: " << keyboardEvent->keyCode() << " with shift: " << keyboardEvent->shiftKey() << std::endl;
       std::cout << "Caps Lock: " << Keyboard::capsLock() << " Num Lock: " << Keyboard::numLock() << std::endl;
       
+      if (keyboardEvent->keyCode() == Keyboard::ESCAPE)
+      {
+         auto nativeApp = NativeApplication::nativeApplication();
+         nativeApp->exit();
+      }
+      
    }
 };
 
@@ -74,7 +82,8 @@ int main(int argc, const char* argv[])
          {"x", -1},
          {"y", -1},
          {"fullsreen", false},
-         {"requestedDisplayResolution", "standard"}, // "standard" || "high"
+         {"vsync", false}, // DESKTOP ONLY
+         {"requestedDisplayResolution", "high"}, // "standard" || "high"
          {"aspectRatio", "landscape"}, // MOBILE ONLY: "portrait" || "landscape" || ""
          {"autoOrients", true} // MOBILE ONLY
       }}

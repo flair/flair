@@ -49,7 +49,7 @@ namespace flair {
       public:
          //std::shared_ptr<NativeWindow> activeWindow();
          
-         std::string applicationDescriptor();
+         flair::JSON applicationDescriptor();
          
          std::string applicationID();
          
@@ -104,39 +104,39 @@ namespace flair {
       public:
          void addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false, int priority = 0) override
          {
-            eventDispatcher->addEventListener(type, listener, useCapture, priority);
+            _stage->addEventListener(type, listener, useCapture, priority);
          }
          
          template <class T>
          void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<flair::events::Event>), std::shared_ptr<T> const& instance, bool useCapture = false, int priority = 0, bool weakReference = false)
          {
-            eventDispatcher->addEventListener(type, listener, instance, useCapture, priority, weakReference);
+            _stage->addEventListener(type, listener, instance, useCapture, priority, weakReference);
          }
          
          template <class T, typename std::enable_if<std::is_base_of<Object, T>::value>::type* = nullptr>
          void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<flair::events::Event>), T* self, bool useCapture = false, int priority = 0, bool weakReference = false)
          {
-            eventDispatcher->addEventListener(type, listener, self, useCapture, priority, weakReference);
+            _stage->addEventListener(type, listener, self, useCapture, priority, weakReference);
          }
          
          bool dispatchEvent(std::shared_ptr<flair::events::Event> event) override
          {
-            return eventDispatcher->dispatchEvent(event);
+            return _stage->dispatchEvent(event);
          }
          
          bool hasEventListener(std::string type) override
          {
-            return hasEventListener(type);
+            return _stage->hasEventListener(type);
          }
          
          void removeEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false) override
          {
-            eventDispatcher->removeEventListener(type, listener, useCapture);
+            _stage->removeEventListener(type, listener, useCapture);
          }
          
          bool willTrigger(std::string type) override
          {
-            return eventDispatcher->willTrigger(type);
+            return _stage->willTrigger(type);
          }
          
       protected:
@@ -149,8 +149,6 @@ namespace flair {
          std::shared_ptr<flair::display::Stage> _stage;
          
       private:
-         std::shared_ptr<flair::events::EventDispatcher> eventDispatcher;
-         
          internal::EventLoop *eventLoop;
          
          flair::internal::services::IWindowService * windowService;

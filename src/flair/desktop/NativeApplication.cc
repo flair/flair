@@ -53,16 +53,14 @@ namespace desktop {
       delete eventLoop;
    }
    
-   std::string NativeApplication::applicationDescriptor()
+   flair::JSON NativeApplication::applicationDescriptor()
    {
-      // TODO: Return JSON descriptor
-      return "";
+      return _applicationDescriptor;
    }
    
    std::string NativeApplication::applicationID()
    {
-      // TODO: Return application ID
-      return "";
+      return _applicationDescriptor["id"].isString() ? _applicationDescriptor["id"].string_value() : "";
    }
    
    bool NativeApplication::autoExit()
@@ -157,7 +155,7 @@ namespace desktop {
    
    void NativeApplication::exit(int errorCode)
    {
-      // TODO: Send exit command to active element
+      windowService->close();
    }
    
    void NativeApplication::paste()
@@ -193,8 +191,11 @@ namespace desktop {
       std::string title = "flair";
       if (initialWindow["title"].isString()) title = initialWindow["title"].string_value();
       
+      bool vsync = false;
+      if (initialWindow["vsync"].isBool()) vsync = initialWindow["vsync"].bool_value();
+      
       windowService->create(title, geom::Rectangle(x, y, width, height), flags, true);
-      renderService->create(windowService, true);
+      renderService->create(windowService, vsync);
       
       windowService->activate();
       _stage->dispatchEvent(flair::make_shared<Event>(Event::ACTIVATE, false, false));

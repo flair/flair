@@ -72,6 +72,7 @@ namespace flair {
       const char* Event::DEACTIVATE = "deactivate";
       const char* Event::DISPLAYING = "displaying";
       const char* Event::ENTER_FRAME = "enterFrame";
+      const char* Event::ERROR = "error";
       const char* Event::EXIT_FRAME = "exitFrame";
       const char* Event::EXITING = "exiting";
       const char* Event::FRAME_CONSTRUCTED = "frameConstructed";

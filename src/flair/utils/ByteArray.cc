@@ -337,7 +337,18 @@ namespace utils {
    {
       // TODO: Bytes
    }
+   
    void ByteArray::writeBytes(ByteArray & bytes, size_t offset , size_t length)
+   {
+      // TODO: Bytes
+   }
+   
+   void ByteArray::readBytes(uint8_t * bytes, size_t offset, size_t length)
+   {
+      // TODO: Bytes
+   }
+   
+   void ByteArray::writeBytes(uint8_t const* bytes, size_t offset, size_t length)
    {
       // TODO: Bytes
    }

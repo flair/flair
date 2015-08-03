@@ -91,6 +91,9 @@ namespace utils {
       void readBytes(ByteArray & bytes, size_t offset = 0, size_t length = 0) override;
       void writeBytes(ByteArray & bytes, size_t offset = 0, size_t length = 0) override;
       
+      void readBytes(uint8_t * bytes, size_t offset = 0, size_t length = 0) override;
+      void writeBytes(uint8_t const* bytes, size_t offset = 0, size_t length = 0) override;
+      
       std::string readMultiByte(size_t length, std::string charSet) override;
       void writeMultiByte(std::string value, std::string charSet) override;
       

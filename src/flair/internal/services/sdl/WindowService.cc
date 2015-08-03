@@ -186,7 +186,7 @@ namespace sdl {
       SDL_SetWindowSize(_window, _bounds.width(), _bounds.height());
    }
    
-   void WindowService::pollEvents(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService)
+   void WindowService::poll(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService)
    {
       if (!_rootWindow) return;
       if (keyboardService) keyboardService->clear();

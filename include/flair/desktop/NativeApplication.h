@@ -18,6 +18,8 @@ namespace flair {
          class IMouseService;
          class ITouchService;
          class IGamepadService;
+         class IAsyncIOService;
+         class IFileService;
       }
    }
    
@@ -149,14 +151,14 @@ namespace flair {
          std::shared_ptr<flair::display::Stage> _stage;
          
       private:
-         internal::EventLoop *eventLoop;
-         
          flair::internal::services::IWindowService * windowService;
          flair::internal::services::IRenderService * renderService;
          flair::internal::services::IKeyboardService * keyboardService;
          flair::internal::services::IMouseService * mouseService;
          flair::internal::services::ITouchService * touchService;
          flair::internal::services::IGamepadService * gamepadService;
+         flair::internal::services::IAsyncIOService * asyncIOService;
+         flair::internal::services::IFileService * fileService;
       };
       
    }

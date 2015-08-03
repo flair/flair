@@ -1,14 +1,16 @@
 #include "flair/flair.h"
+#include "flair/display/Stage.h"
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
-#include "flair/display/Stage.h"
+#include "flair/filesystem/File.h"
 #include "flair/ui/Keyboard.h"
 #include "flair/desktop/NativeApplication.h"
 
 using flair::JSON;
+using flair::display::Stage;
 using flair::events::Event;
 using flair::events::KeyboardEvent;
-using flair::display::Stage;
+using flair::filesystem::File;
 using flair::ui::Keyboard;
 using flair::desktop::NativeApplication;
 
@@ -29,10 +31,20 @@ protected:
 public:
    virtual ~GameStage() {};
    
+protected:
+   std::shared_ptr<File> _file;
+   
 public:
    void onActivated(std::shared_ptr<Event> e)
    {
       std::cout << "Activated" << std::endl;
+      
+      std::cout << "Application Directory: " << File::applicationDirectory()->name() << std::endl;
+      _file = flair::make_shared<File>("/Users/axon/Projects/C/flair/premake.lua");
+      
+      _file->addEventListener(Event::COMPLETE, &GameStage::onFileLoaded, this);
+      _file->load();
+      
    }
    
    void onDeactivated(std::shared_ptr<Event> e)
@@ -51,12 +63,20 @@ public:
       std::cout << "On Key Down: " << keyboardEvent->keyCode() << " with shift: " << keyboardEvent->shiftKey() << std::endl;
       std::cout << "Caps Lock: " << Keyboard::capsLock() << " Num Lock: " << Keyboard::numLock() << std::endl;
       
-      if (keyboardEvent->keyCode() == Keyboard::ESCAPE)
-      {
+      if (keyboardEvent->keyCode() == Keyboard::ESCAPE) {
          auto nativeApp = NativeApplication::nativeApplication();
          nativeApp->exit();
       }
-      
+      else if (keyboardEvent->keyCode() == Keyboard::F) {
+         _file->load();
+      }
+   }
+   
+   void onFileLoaded(std::shared_ptr<Event> e)
+   {
+      auto data = _file->data();
+      data->readUTFBytes(data->length());
+      std::cout << "File Loaded" << std::endl;
    }
 };
 

@@ -29,6 +29,8 @@ namespace utils {
       
       virtual void readBytes(ByteArray & bytes, size_t offset = 0, size_t length = 0) = 0;
       
+      virtual void readBytes(uint8_t * bytes, size_t offset = 0, size_t length = 0) = 0;
+      
       virtual double readDouble() = 0;
 
       virtual float readFloat() = 0;

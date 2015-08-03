@@ -20,9 +20,19 @@ newoption {
    }
 }
 
+newoption {
+   trigger     = "io",
+   value       = "uv",
+   description = "Set the io service for file and network requests",
+   allowed = {
+      { "uv",         "Use libuv for all async IO requests" },
+      { "emscripten", "Emscripten IO" },
+   }
+}
+
 if (not _OPTIONS["platform"]) then _OPTIONS["platform"] = "native" end
 if (not _OPTIONS["renderer"]) then _OPTIONS["renderer"] = "SDL" end
-
+if (not _OPTIONS["io"]) then _OPTIONS["io"] = "uv" end
 
 solution "flair"
    configurations { "Debug", "Release" }
@@ -34,8 +44,22 @@ solution "flair"
      defines { "FLAIR_PLATFORM_MOCK" }
    end
 
+   if (_OPTIONS["platform"] == "native") then
+     filter { "action:xcode*" }
+      defines { "FLAIR_PLATFORM_MAC" }
+     filter { "action:vs*" }
+      defines { "FLAIR_PLATFORM_WINDOWS" }
+     filter { "action:gmake*" }
+       defines { "FLAIR_PLATFORM_LINUX" }
+     filter { }
+   end
+
+
    -- Set our renderer defines
    defines { "FLAIR_RENDERER_" .. string.upper(_OPTIONS["renderer"]); }
+
+   -- Set our io
+   defines { "FLAIR_IO_" .. string.upper(_OPTIONS["io"]); }
 
    filter { "action:xcode*" }
       xcodebuildsettings {

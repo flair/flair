@@ -60,7 +60,7 @@ namespace flair {
             virtual bool enterFullscreen(int width, int height, bool useClosestResolution = true) = 0;
             virtual void exitFullscreen() = 0;
             
-            virtual void pollEvents(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService) = 0;
+            virtual void poll(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService) = 0;
          };
          
       }

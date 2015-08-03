@@ -27,6 +27,8 @@ namespace utils {
       
       virtual void writeBytes(ByteArray & bytes, size_t offset = 0, size_t length = 0) = 0;
       
+      virtual void writeBytes(uint8_t const* bytes, size_t offset = 0, size_t length = 0) = 0;
+      
       virtual void writeDouble(double value) = 0;
       
       virtual void writeFloat(float value) = 0;

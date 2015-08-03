@@ -2,18 +2,25 @@
 #include "flair/ui/Keyboard.h"
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
-#include "flair/internal/EventLoop.h"
+#include "flair/net/FileReference.h"
 #include "flair/internal/services/IWindowService.h"
 #include "flair/internal/services/IRenderService.h"
 #include "flair/internal/services/IKeyboardService.h"
 #include "flair/internal/services/IMouseService.h"
 #include "flair/internal/services/ITouchService.h"
 #include "flair/internal/services/IGamepadService.h"
+#include "flair/internal/services/IAsyncIOService.h"
+#include "flair/internal/services/IFileService.h"
 
 #ifdef FLAIR_PLATFORM_SDL
 #include "flair/internal/services/sdl/WindowService.h"
 #include "flair/internal/services/sdl/RenderService.h"
 #include "flair/internal/services/sdl/KeyboardService.h"
+#endif
+
+#ifdef FLAIR_IO_UV
+#include "flair/internal/services/uv/AsyncIOService.h"
+#include "flair/internal/services/uv/FileService.h"
 #endif
 
 #include <chrono>
@@ -34,6 +41,8 @@ namespace desktop {
       mouseService = nullptr;
       touchService = nullptr;
       gamepadService = nullptr;
+      asyncIOService = nullptr;
+      fileService = nullptr;
       
 #ifdef FLAIR_PLATFORM_SDL
       windowService = new sdl::WindowService();
@@ -44,13 +53,34 @@ namespace desktop {
       renderService = new sdl::RenderService();
 #endif
       
-      eventLoop = new EventLoop();
+#ifdef FLAIR_IO_UV
+      asyncIOService = new uv::AsyncIOService();
+      fileService = new uv::FileService();
+#endif
+      
+      // Setup dependency services
+      fileService->init(asyncIOService);
+      
+      // Inject services into the public api
       ui::Keyboard::keyboardService = keyboardService;
+      net::FileReference::fileService = fileService;
    }
    
    NativeApplication::~NativeApplication()
    {
-      delete eventLoop;
+#ifdef FLAIR_PLATFORM_SDL
+      delete static_cast<sdl::WindowService*>(windowService);
+      delete static_cast<sdl::KeyboardService*>(keyboardService);
+#endif
+      
+#ifdef FLAIR_RENDERER_SDL
+      delete static_cast<sdl::RenderService*>(renderService);
+#endif
+      
+#ifdef FLAIR_IO_UV
+      delete static_cast<uv::AsyncIOService*>(asyncIOService);
+      delete static_cast<uv::FileService*>(fileService);
+#endif
    }
    
    flair::JSON NativeApplication::applicationDescriptor()
@@ -202,7 +232,8 @@ namespace desktop {
       
       auto previousTime = std::chrono::high_resolution_clock::now();
       while (!windowService->quiting()) {
-         windowService->pollEvents(gamepadService, touchService, mouseService, keyboardService);
+         asyncIOService->poll();
+         windowService->poll(gamepadService, touchService, mouseService, keyboardService);
          
          // Dispatch keyboard events
          {
@@ -223,15 +254,6 @@ namespace desktop {
       }
       
       _stage->dispatchEvent(flair::make_shared<Event>(Event::DEACTIVATE, false, false));
-      
-#ifdef FLAIR_PLATFORM_SDL
-      delete static_cast<sdl::WindowService*>(windowService); windowService = nullptr;
-      delete static_cast<sdl::KeyboardService*>(keyboardService); keyboardService = nullptr;
-#endif
-      
-#ifdef FLAIR_RENDERER_SDL
-      delete static_cast<sdl::RenderService*>(renderService); renderService = nullptr;
-#endif
    }
       
 }}

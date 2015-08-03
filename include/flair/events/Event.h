@@ -42,6 +42,7 @@ namespace flair {
          static const char* DEACTIVATE;
          static const char* DISPLAYING;
          static const char* ENTER_FRAME;
+         static const char* ERROR;
          static const char* EXIT_FRAME;
          static const char* EXITING;
          static const char* FRAME_CONSTRUCTED;

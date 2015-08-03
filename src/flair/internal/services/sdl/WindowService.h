@@ -51,7 +51,7 @@ namespace sdl {
       bool enterFullscreen(int width, int height, bool useClosestResolution = true) override;
       void exitFullscreen() override;
       
-      void pollEvents(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService) override;
+      void poll(IGamepadService * gamepadService, ITouchService * touchService, IMouseService * mouseService, IKeyboardService * keyboardService) override;
       
    // Internal
    private:

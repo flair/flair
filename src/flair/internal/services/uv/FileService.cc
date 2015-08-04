@@ -122,6 +122,8 @@ namespace uv {
    
    std::string FileService::applicationDirectory()
    {
+      std::string path;
+      
 #ifdef FLAIR_PLATFORM_MAC
       char buffer[2048];
       uint32_t size = 0;
@@ -130,15 +132,18 @@ namespace uv {
       int ret = _NSGetExecutablePath(buffer, &size);
       assert(ret != -1);
       
-      return std::string(buffer, size);
+      path = std::string(buffer, size);
+      path = path.substr(0, path.find_last_of("/"));
       
 #elif FLAIR_PLATFORM_WINDOWS
       
+      
 #elif FLAIR_PLATFORM_LINUX
+      
       
 #endif
       
-      return "";
+      return path;
    }
    
    std::string FileService::applicationStorageDirectory()
@@ -166,11 +171,19 @@ namespace uv {
       return "";
    }
    
+   std::string FileService::seperator()
+   {
+#if FLAIR_PLATFORM_WINDOWS
+      return "\\";
+#endif
+      return "/";
+   }
+   
    
 // AsyncFileRequest
    
    
-   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _error(0), _complete(false), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
+   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _error(0), _complete(false), _ptr(nullptr), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
    {
       _stats.created = std::time(nullptr);
       _stats.modified = std::time(nullptr);
@@ -275,6 +288,16 @@ namespace uv {
    bool AsyncFileRequest::complete(bool value)
    {
       return _complete = value;
+   }
+   
+   void * AsyncFileRequest::ptr()
+   {
+      return _ptr;
+   }
+   
+   void * AsyncFileRequest::ptr(void * ptr)
+   {
+      return _ptr = ptr;
    }
 
 }}}}

@@ -104,7 +104,6 @@ namespace net {
             
             // If the request is not complete, keep reading the data into our buffer
             if (!request->complete()) {
-               _data->position(request->offset());
                _data->writeBytes(request->data(), request->offset(), request->length());
                return;
             }
@@ -117,6 +116,7 @@ namespace net {
                   return;
                }
                
+               _data->position(0);
                _state = FileState::FILE_LOADED;
                dispatchEvent(flair::make_shared<Event>(Event::COMPLETE));
             });

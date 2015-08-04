@@ -33,10 +33,14 @@ namespace uv {
       bool complete() override;
       bool complete(bool value) override;
       
+      void * ptr() override;
+      void * ptr(void * ptr) override;
+      
    protected:
       IAsyncIORequest::Type _type;
       int _error;
       bool _complete;
+      void * _ptr;
    };
    
    
@@ -63,7 +67,7 @@ namespace uv {
       bool willTrigger(std::string type) override;
       
    protected:
-         std::shared_ptr<flair::events::EventDispatcher> eventDispatcher;
+      std::shared_ptr<flair::events::EventDispatcher> eventDispatcher;
       
       std::atomic_bool ready;
       std::atomic_bool quit;
@@ -74,7 +78,9 @@ namespace uv {
       
       ConcurrentQueue<std::shared_ptr<IAsyncIORequest>> inboundIORequests;
       ConcurrentQueue<std::shared_ptr<IAsyncIORequest>> outboundIORequests;
+      
       std::map<uv_fs_t*, std::shared_ptr<IAsyncIORequest>> pendingIORequests;
+      std::map<std::shared_ptr<IAsyncIORequest>, uv_buf_t> pendingIOBuffers;
       
    private:
       void eventLoop();

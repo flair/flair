@@ -333,24 +333,30 @@ namespace utils {
       _position += sizeof(uint64_t);
    }
    
-   void ByteArray::readBytes(ByteArray & bytes, size_t offset, size_t length)
+   void ByteArray::readBytes(ByteArray & bytes, size_t offset, size_t len)
    {
       // TODO: Bytes
    }
    
-   void ByteArray::writeBytes(ByteArray & bytes, size_t offset , size_t length)
+   void ByteArray::writeBytes(ByteArray & bytes, size_t offset , size_t len)
    {
       // TODO: Bytes
    }
    
-   void ByteArray::readBytes(uint8_t * bytes, size_t offset, size_t length)
+   void ByteArray::readBytes(uint8_t * bytes, size_t offset, size_t len)
    {
-      // TODO: Bytes
+      if (_position + len > _length) throw std::ios_base::failure("EOF reached");
+      
+      memcpy(bytes, &_byteArray[_position], len);
+      _position += len;
    }
    
-   void ByteArray::writeBytes(uint8_t const* bytes, size_t offset, size_t length)
+   void ByteArray::writeBytes(uint8_t const* bytes, size_t offset, size_t len)
    {
-      // TODO: Bytes
+      length(_position + len);
+      
+      memcpy(_byteArray, &bytes[offset], len);
+      _position += len;
    }
    
    std::string ByteArray::readMultiByte(size_t length, std::string charSet)
@@ -386,10 +392,11 @@ namespace utils {
       // TODO: Strings
    }
    
-   std::string ByteArray::readUTFBytes(size_t length)
+   std::string ByteArray::readUTFBytes(size_t len)
    {
-      // TODO: Strings
-      return "";
+      if (_position + len > _length) throw std::ios_base::failure("EOF reached");
+      
+      return std::string((char*)&_byteArray[_position], len);
    }
    
    void ByteArray::writeUTFBytes(std::string value)

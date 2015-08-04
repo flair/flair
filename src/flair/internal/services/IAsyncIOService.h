@@ -37,6 +37,9 @@ namespace services {
       virtual bool complete() = 0;
       virtual bool complete(bool value) = 0;
       
+      virtual void * ptr() = 0;
+      virtual void * ptr(void * ptr) = 0;
+      
    };
    
    class IAsyncFileRequest : public IAsyncIORequest

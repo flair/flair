@@ -139,16 +139,29 @@ namespace uv {
                auto fileRequest = std::dynamic_pointer_cast<IAsyncFileRequest>(request);
                assert(fileRequest); if (!fileRequest) return;
                
-               uv_fs_t * req = new uv_fs_t();
-               req->data = this;
+               uv_fs_t * req = (uv_fs_t*)fileRequest->ptr();
+               uv_buf_t iov;
+               
+               if (!req) {
+                  fileRequest->data(new uint8_t[65536]);
+                  iov = uv_buf_init((char*)fileRequest->data(), 65536);
+                  pendingIOBuffers.insert(std::make_pair(request, iov));
+                  
+                  req = new uv_fs_t();
+                  req->data = this;
+                  fileRequest->ptr(req);
+               }
+               else {
+                  iov = pendingIOBuffers.find(request)->second;
+               }
                pendingIORequests.insert(std::make_pair(req, request));
                
-               //uv_fs_read(uv, req, fileRequest->handle(), [](uv_fs_t * req) {
+               uv_fs_read(uv, req, fileRequest->handle(), &iov, 1, -1, [](uv_fs_t * req) {
                   auto self = static_cast<AsyncIOService*>(req->data);
                   auto asyncIORequest = self->pendingIORequests[req];
                   self->pendingIORequests.erase(req);
                   self->readFile(req, asyncIORequest);
-               //});
+               });
             } break;
                
             case IAsyncIORequest::Type::FILE_WRITE: break;
@@ -168,16 +181,30 @@ namespace uv {
       }
       fileRequest->complete(true);
       
-      uv_fs_req_cleanup(req);
+      uv_fs_req_cleanup(req); delete req;
       outboundIORequests.enqueue(asyncIORequest);
    }
    
    void AsyncIOService::readFile(uv_fs_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest)
    {
       auto fileRequest = std::dynamic_pointer_cast<IAsyncFileRequest>(asyncIORequest);
-      fileRequest->complete(true);
-      
-      uv_fs_req_cleanup(req);
+      if (req->result > 0) {
+         fileRequest->length(req->result);
+      }
+      else if (req->result < 0) {
+         fileRequest->error(-1);
+      }
+      else {
+         pendingIOBuffers.erase(asyncIORequest);
+         
+         uv_fs_req_cleanup(req); delete req;
+         fileRequest->ptr(nullptr);
+         delete fileRequest->data();
+         delete fileRequest->data(nullptr);
+         
+         fileRequest->complete(true);
+      }
+   
       outboundIORequests.enqueue(asyncIORequest);
    }
    
@@ -186,7 +213,7 @@ namespace uv {
       auto fileRequest = std::dynamic_pointer_cast<IAsyncFileRequest>(asyncIORequest);
       fileRequest->complete(true);
       
-      uv_fs_req_cleanup(req);
+      uv_fs_req_cleanup(req); delete req;
       outboundIORequests.enqueue(asyncIORequest);
    }
    
@@ -200,7 +227,7 @@ namespace uv {
       fileRequest->handle(-1);
       fileRequest->complete(true);
       
-      uv_fs_req_cleanup(req);
+      uv_fs_req_cleanup(req); delete req;
       outboundIORequests.enqueue(asyncIORequest);
    }
    
@@ -208,7 +235,7 @@ namespace uv {
 // AsyncIORequest
    
    
-   AsyncIORequest::AsyncIORequest(IAsyncIORequest::Type type) : _type(type), _error(0), _complete(false)
+   AsyncIORequest::AsyncIORequest(IAsyncIORequest::Type type) : _type(type), _error(0), _complete(false), _ptr(nullptr)
    {
       
    }
@@ -241,6 +268,16 @@ namespace uv {
    bool AsyncIORequest::complete(bool value)
    {
       return _complete = value;
+   }
+   
+   void * AsyncIORequest::ptr()
+   {
+      return _ptr;
+   }
+   
+   void * AsyncIORequest::ptr(void * ptr)
+   {
+      return _ptr = ptr;
    }
 
 }}}}

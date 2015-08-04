@@ -50,10 +50,14 @@ namespace uv {
       bool complete() override;
       bool complete(bool value) override;
       
+      void * ptr() override;
+      void * ptr(void * ptr) override;
+      
    protected:
       Type _type;
       int _error;
       bool _complete;
+      void * _ptr;
       std::shared_ptr<flair::net::FileReference> _fileReference;
       std::string _path;
       FileHandle _handle;
@@ -95,6 +99,8 @@ namespace uv {
       std::string documentsDirectory() override;
       
       std::string userDirectory() override;
+      
+      std::string seperator() override;
       
    protected:
       void onAsyncIORequest(std::shared_ptr<flair::events::Event> event);

@@ -75,8 +75,9 @@ public:
    void onFileLoaded(std::shared_ptr<Event> e)
    {
       auto data = _file->data();
-      data->readUTFBytes(data->length());
-      std::cout << "File Loaded" << std::endl;
+      auto text = data->readUTFBytes(data->length());
+      std::cout << "File Loaded:" << std::endl;
+      std::cout << text << std::endl;
    }
 };
 

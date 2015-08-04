@@ -19,6 +19,8 @@ namespace filesystem {
       
    public:
       static std::shared_ptr<File> applicationDirectory();
+
+      static std::string seperator();
    };
    
 }}

@@ -37,6 +37,8 @@ namespace services {
       virtual std::string documentsDirectory() = 0;
       
       virtual std::string userDirectory() = 0;
+      
+      virtual std::string seperator() = 0;
    };
    
 }}}

@@ -21,5 +21,11 @@ namespace filesystem {
       assert(fileService);
       return flair::make_shared<File>(fileService->applicationDirectory());
    }
+   
+   std::string File::seperator()
+   {
+      assert(fileService);
+      return fileService->seperator();
+   }
 
 }}

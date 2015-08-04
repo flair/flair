@@ -97,26 +97,12 @@ namespace uv {
       }
       
       if (!callback) return;
-      if (IAsyncIORequest::Type::FILE_OPEN == fileRequest->type()) {
-         if (Event::COMPLETE == event->type()) {
-            asyncCallbacks.erase(it);
-            callback(fileRequest);
-         }
+      if (Event::PREPARING == event->type()) {
+         callback(fileRequest);
       }
-      else if (IAsyncIORequest::Type::FILE_READ == fileRequest->type()) {
-         if (Event::PREPARING == event->type()) {
-            callback(fileRequest);
-         }
-         else if (Event::COMPLETE == event->type()) {
-            asyncCallbacks.erase(it);
-            callback(fileRequest);
-         }
-      }
-      else if (IAsyncIORequest::Type::FILE_CLOSE == fileRequest->type()) {
-         if (Event::COMPLETE == event->type()) {
-            asyncCallbacks.erase(it);
-            callback(fileRequest);
-         }
+      else if (Event::COMPLETE == event->type()) {
+         asyncCallbacks.erase(it);
+         callback(fileRequest);
       }
    }
    
@@ -183,7 +169,7 @@ namespace uv {
 // AsyncFileRequest
    
    
-   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _error(0), _complete(false), _ptr(nullptr), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
+   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _id(SIZE_MAX), _error(0), _complete(false), _ptr(nullptr), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
    {
       _stats.created = std::time(nullptr);
       _stats.modified = std::time(nullptr);
@@ -270,6 +256,16 @@ namespace uv {
       return _type;
    }
    
+   size_t AsyncFileRequest::id()
+   {
+      return _id;
+   }
+   
+   size_t AsyncFileRequest::id(size_t value)
+   {
+      return _id = value;
+   }
+   
    int AsyncFileRequest::error()
    {
       return _error;
@@ -288,16 +284,6 @@ namespace uv {
    bool AsyncFileRequest::complete(bool value)
    {
       return _complete = value;
-   }
-   
-   void * AsyncFileRequest::ptr()
-   {
-      return _ptr;
-   }
-   
-   void * AsyncFileRequest::ptr(void * ptr)
-   {
-      return _ptr = ptr;
    }
 
 }}}}

@@ -31,15 +31,14 @@ namespace services {
    public:
       virtual Type type() = 0;
       
+      virtual size_t id() = 0;
+      virtual size_t id(size_t value) = 0;
+      
       virtual int error() = 0;
       virtual int error(int value) = 0;
       
       virtual bool complete() = 0;
       virtual bool complete(bool value) = 0;
-      
-      virtual void * ptr() = 0;
-      virtual void * ptr(void * ptr) = 0;
-      
    };
    
    class IAsyncFileRequest : public IAsyncIORequest

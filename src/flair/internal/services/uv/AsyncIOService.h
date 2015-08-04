@@ -10,7 +10,9 @@
 
 #include <thread>
 #include <atomic>
-#include <unordered_map>
+#include <vector>
+#include <stack>
+#include <map>
 
 namespace flair {
 namespace internal {
@@ -27,17 +29,18 @@ namespace uv {
    public:
       IAsyncIORequest::Type type() override;
       
+      size_t id() override;
+      size_t id(size_t value) override;
+      
       int error() override;
       int error(int value) override;
       
       bool complete() override;
       bool complete(bool value) override;
       
-      void * ptr() override;
-      void * ptr(void * ptr) override;
-      
    protected:
       IAsyncIORequest::Type _type;
+      size_t _id;
       int _error;
       bool _complete;
       void * _ptr;
@@ -46,6 +49,13 @@ namespace uv {
    
    class AsyncIOService : public IAsyncIOService
    {
+   public:
+      struct Context
+      {
+         uv_fs_t request;
+         uv_buf_t buffer;
+      };
+      
    public:
       AsyncIOService();
       ~AsyncIOService();
@@ -79,8 +89,14 @@ namespace uv {
       ConcurrentQueue<std::shared_ptr<IAsyncIORequest>> inboundIORequests;
       ConcurrentQueue<std::shared_ptr<IAsyncIORequest>> outboundIORequests;
       
-      std::map<uv_fs_t*, std::shared_ptr<IAsyncIORequest>> pendingIORequests;
-      std::map<std::shared_ptr<IAsyncIORequest>, uv_buf_t> pendingIOBuffers;
+      std::vector<Context> contextPool;
+      std::stack<uint32_t> contextStack;
+      
+      std::map<uv_fs_t *, std::shared_ptr<IAsyncIORequest>> pendingIORequests;
+      
+   protected:
+      uint32_t popContextId();
+      void pushContextId(uint32_t id);
       
    private:
       void eventLoop();

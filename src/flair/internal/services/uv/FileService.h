@@ -44,17 +44,18 @@ namespace uv {
       
       Type type() override;
       
+      size_t id() override;
+      size_t id(size_t value) override;
+      
       int error() override;
       int error(int value) override;
       
       bool complete() override;
       bool complete(bool value) override;
       
-      void * ptr() override;
-      void * ptr(void * ptr) override;
-      
    protected:
       Type _type;
+      size_t _id;
       int _error;
       bool _complete;
       void * _ptr;

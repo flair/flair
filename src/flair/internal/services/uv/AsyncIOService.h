@@ -52,7 +52,22 @@ namespace uv {
    public:
       struct Context
       {
-         uv_fs_t request;
+         union {
+            uv_fs_event fs_event;
+            uv_handle_t handle;
+            uv_stream_t stream;
+            uv_tcp_t tcp;
+            uv_udp_t udp;
+         }; // handles
+         
+         union {
+            uv_req_t req;
+            uv_connect_t connect;
+            uv_write_t write;
+            uv_udp_send_t udp_send;
+            uv_fs_t fs;
+         }; // requests
+         
          uv_buf_t buffer;
       };
       
@@ -104,6 +119,7 @@ namespace uv {
       uv_async_t asyncDequeueHandle;
       void asyncDequeue(uv_async_t *handle);
       
+      void statFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
       void openFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
       void readFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
       void writeFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);

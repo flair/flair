@@ -36,6 +36,15 @@ namespace uv {
       asyncIOService->addEventListener(Event::COMPLETE, [this](std::shared_ptr<flair::events::Event> e) { onAsyncIORequest(e); });
    }
    
+   void FileService::stat(std::string path, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback)
+   {
+      asyncCallbacks.insert(std::make_pair(fileReference, callback));
+      
+      auto request = std::make_shared<AsyncFileRequest>(IAsyncIORequest::Type::FILE_STAT, fileReference);
+      request->path(path);
+      asyncIOService->enqueue(std::static_pointer_cast<IAsyncIORequest>(request));
+   }
+   
    void FileService::open(std::string path, uint32_t flags, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback)
    {
       asyncCallbacks.insert(std::make_pair(fileReference, callback));
@@ -51,15 +60,6 @@ namespace uv {
       asyncCallbacks.insert(std::make_pair(fileReference, callback));
       
       auto request = std::make_shared<AsyncFileRequest>(IAsyncIORequest::Type::FILE_CLOSE, fileReference);
-      request->handle(file);
-      asyncIOService->enqueue(std::static_pointer_cast<IAsyncIORequest>(request));
-   }
-   
-   void FileService::stat(IAsyncFileRequest::FileHandle file, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback)
-   {
-      asyncCallbacks.insert(std::make_pair(fileReference, callback));
-      
-      auto request = std::make_shared<AsyncFileRequest>(IAsyncIORequest::Type::FILE_STAT, fileReference);
       request->handle(file);
       asyncIOService->enqueue(std::static_pointer_cast<IAsyncIORequest>(request));
    }
@@ -119,7 +119,7 @@ namespace uv {
       assert(ret != -1);
       
       path = std::string(buffer, size);
-      path = path.substr(0, path.find_last_of("/"));
+      path = path.substr(0, path.find_last_of("/")) + "/Resources";
       
 #elif FLAIR_PLATFORM_WINDOWS
       

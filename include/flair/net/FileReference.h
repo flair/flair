@@ -36,8 +36,6 @@ namespace net {
       std::string name();
       
       size_t size();
-
-      std::string type();
       
    // Methods
    public:
@@ -49,6 +47,11 @@ namespace net {
       int _state;
       std::string _path;
       std::shared_ptr<flair::utils::ByteArray> _data;
+      std::time_t _creationDate;
+      std::time_t _modificationDate;
+      size_t _size;
+      bool _exists;
+      bool _isDirectory;
       
    // Internal
    protected:

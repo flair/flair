@@ -44,6 +44,9 @@ namespace uv {
          if (request->complete()) {
             dispatchEvent(flair::make_shared<AsyncIOEvent>(Event::COMPLETE, request));
          }
+         else if (request->error() != 0) {
+            dispatchEvent(flair::make_shared<AsyncIOEvent>(Event::ERROR, request));
+         }
          else {
             dispatchEvent(flair::make_shared<AsyncIOEvent>(Event::PREPARING, request));
             enqueue(request);
@@ -133,10 +136,10 @@ namespace uv {
                
                auto id = popContextId();
                auto context = &contextPool[id];
-               context->request.data = this; fileRequest->id(id);
-               pendingIORequests.insert(std::make_pair(&context->request, request));
+               context->req.data = this; fileRequest->id(id);
+               pendingIORequests.insert(std::make_pair(&context->fs, request));
                
-               uv_fs_open(uv, &context->request, fileRequest->path().c_str(), O_RDONLY, S_IRUSR, [](uv_fs_t * req) {
+               uv_fs_open(uv, &context->fs, fileRequest->path().c_str(), O_RDONLY, S_IRUSR, [](uv_fs_t * req) {
                   auto self = static_cast<AsyncIOService*>(req->data);
                   auto asyncIORequest = self->pendingIORequests[req];
                   self->pendingIORequests.erase(req);
@@ -150,11 +153,10 @@ namespace uv {
                
                auto id = popContextId();
                auto context = &contextPool[id];
-               context->request.data = this;
-               context->request.data = this; fileRequest->id(id);
-               pendingIORequests.insert(std::make_pair(&context->request, request));
+               context->req.data = this; fileRequest->id(id);
+               pendingIORequests.insert(std::make_pair(&context->fs, request));
                
-               uv_fs_close(uv, &context->request, fileRequest->handle(), [](uv_fs_t * req) {
+               uv_fs_close(uv, &context->fs, fileRequest->handle(), [](uv_fs_t * req) {
                   auto self = static_cast<AsyncIOService*>(req->data);
                   auto asyncIORequest = self->pendingIORequests[req];
                   self->pendingIORequests.erase(req);
@@ -162,7 +164,23 @@ namespace uv {
                });
             } break;
                
-            case IAsyncIORequest::Type::FILE_STAT: break;
+            case IAsyncIORequest::Type::FILE_STAT: {
+               auto fileRequest = std::dynamic_pointer_cast<IAsyncFileRequest>(request);
+               assert(fileRequest); if (!fileRequest) return;
+               
+               auto id = popContextId();
+               auto context = &contextPool[id];
+               context->req.data = this; fileRequest->id(id);
+               pendingIORequests.insert(std::make_pair(&context->fs, request));
+               
+               uv_fs_stat(uv, &context->fs, fileRequest->path().c_str(), [](uv_fs_t * req) {
+                  auto self = static_cast<AsyncIOService*>(req->data);
+                  auto asyncIORequest = self->pendingIORequests[req];
+                  self->pendingIORequests.erase(req);
+                  self->statFile(req, asyncIORequest);
+               });
+               
+            } break;
                
             case IAsyncIORequest::Type::FILE_DELETE: break;
                
@@ -176,7 +194,7 @@ namespace uv {
                if (id == SIZE_MAX) {
                   auto id = popContextId();
                   context = &contextPool[id];
-                  context->request.data = this; fileRequest->id(id);
+                  context->req.data = this; fileRequest->id(id);
                   
                   fileRequest->data(new uint8_t[65536]);
                   context->buffer = uv_buf_init((char*)fileRequest->data(), 65536);
@@ -184,9 +202,9 @@ namespace uv {
                else {
                   context = &contextPool[id];
                }
-               pendingIORequests.insert(std::make_pair(&context->request, request));
+               pendingIORequests.insert(std::make_pair(&context->fs, request));
                
-               uv_fs_read(uv, &context->request, fileRequest->handle(), &context->buffer, 1, -1, [](uv_fs_t * req) {
+               uv_fs_read(uv, &context->fs, fileRequest->handle(), &context->buffer, 1, -1, [](uv_fs_t * req) {
                   auto self = static_cast<AsyncIOService*>(req->data);
                   auto asyncIORequest = self->pendingIORequests[req];
                   self->pendingIORequests.erase(req);
@@ -198,6 +216,30 @@ namespace uv {
             default: break;
          }
       }
+   }
+   
+   void AsyncIOService::statFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest)
+   {
+      auto fileRequest = std::dynamic_pointer_cast<IAsyncFileRequest>(asyncIORequest);
+
+      auto stats = fileRequest->stats();
+      if (req->result == -1) {
+         stats.exists = false;
+      }
+      else {
+         stats.exists = true;
+         stats.isDirectory = S_ISDIR(req->statbuf.st_mode);
+         stats.created = req->statbuf.st_birthtim.tv_sec;
+         stats.modified = req->statbuf.st_mtim.tv_sec;
+         stats.size = req->statbuf.st_size;
+      }
+      fileRequest->stats(stats);
+      fileRequest->complete(true);
+      
+      uv_fs_req_cleanup(req);
+      pushContextId(fileRequest->id()); fileRequest->id(SIZE_MAX);
+      
+      outboundIORequests.enqueue(asyncIORequest);
    }
    
    void AsyncIOService::openFile(uv_fs_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest)

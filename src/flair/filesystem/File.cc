@@ -16,6 +16,16 @@ namespace filesystem {
       
    }
    
+   bool File::exists()
+   {
+      return _exists;
+   }
+   
+   bool File::isDirectory()
+   {
+      return _isDirectory;
+   }
+   
    std::shared_ptr<File> File::applicationDirectory()
    {
       assert(fileService);

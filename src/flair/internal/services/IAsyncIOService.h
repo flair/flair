@@ -49,6 +49,8 @@ namespace services {
    public:
       struct FileStats
       {
+         bool exists;
+         bool isDirectory;
          uint64_t size;
          std::time_t created;
          std::time_t modified;

@@ -16,6 +16,12 @@ namespace filesystem {
       
    public:
       virtual ~File();
+   
+   // Properties
+   public:
+      bool exists();
+      
+      bool isDirectory();
       
    public:
       static std::shared_ptr<File> applicationDirectory();

@@ -9,7 +9,6 @@
 namespace flair {
    
    namespace internal {
-      class EventLoop;
       
       namespace services {
          class IWindowService;

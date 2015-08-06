@@ -1,0 +1,17 @@
+version: 1.0.{build}
+
+configuration: Debug
+
+clone_depth: 5
+
+install:
+  - git submodule update --init --recursive
+  - call .\\build\\vs2013.bat
+
+build:
+  project: flair.sln
+  parallel: true
+  verbosity: minimal
+
+test_script:
+  - call .\\bin\\Debug\\tests.exe

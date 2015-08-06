@@ -2,7 +2,6 @@
 
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <io.h>
 
 #ifdef _WIN32
 #define S_IRUSR S_IREAD

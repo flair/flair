@@ -38,8 +38,9 @@ namespace {
 }
 
 namespace flair {
-   
-   struct allocator {
+
+   class allocator {
+   public:
       template<typename T>
       static std::shared_ptr<T> make_shared()
       {

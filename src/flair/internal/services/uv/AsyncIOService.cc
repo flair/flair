@@ -1,5 +1,14 @@
 #include "flair/internal/services/uv/AsyncIOService.h"
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <io.h>
+
+#ifdef _WIN32
+#define S_IRUSR S_IREAD
+#define S_IWUSR S_IWRITE
+#endif
+
 namespace flair {
 namespace internal {
 namespace services {
@@ -228,7 +237,7 @@ namespace uv {
       }
       else {
          stats.exists = true;
-         stats.isDirectory = S_ISDIR(req->statbuf.st_mode);
+         stats.isDirectory = req->statbuf.st_mode & S_IFDIR;
          stats.created = req->statbuf.st_birthtim.tv_sec;
          stats.modified = req->statbuf.st_mtim.tv_sec;
          stats.size = req->statbuf.st_size;

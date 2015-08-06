@@ -6,6 +6,7 @@
 #include "flair/utils/ByteArray.h"
 
 #include <chrono>
+#include <ctime>
 
 namespace flair { namespace desktop { class NativeApplication; } }
 namespace flair { namespace internal { namespace services { class IFileService; } } }

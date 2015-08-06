@@ -99,7 +99,7 @@ namespace net {
          dispatchEvent(flair::make_shared<Event>(Event::INIT));
          
          // Open the file
-         fileService->open(_path, 0, std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
+         fileService->open(_path, 0, shared<FileReference>(), [this](std::shared_ptr<IAsyncFileRequest> request) {
             if (request->error() != 0) {
                _state = FileState::FILE_EMPTY;
                dispatchEvent(flair::make_shared<Event>(Event::ERROR));
@@ -107,10 +107,10 @@ namespace net {
             }
             
             // If success, then read the file
-            fileService->read(request->handle(), std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
+            fileService->read(request->handle(), shared<FileReference>(), [this](std::shared_ptr<IAsyncFileRequest> request) {
                if (request->error() != 0) {
                   // If there was an error, ensure we close the file
-                  fileService->close(request->handle(), std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
+                  fileService->close(request->handle(), shared<FileReference>(), [this](std::shared_ptr<IAsyncFileRequest> request) {
                      _state = FileState::FILE_EMPTY;
                      dispatchEvent(flair::make_shared<Event>(Event::ERROR));
                   });
@@ -124,7 +124,7 @@ namespace net {
                }
                
                // Finally, close the file
-               fileService->close(request->handle(), std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
+               fileService->close(request->handle(), shared<FileReference>(), [this](std::shared_ptr<IAsyncFileRequest> request) {
                   if (request->error() != 0) {
                      _state = FileState::FILE_EMPTY;
                      dispatchEvent(flair::make_shared<Event>(Event::ERROR));

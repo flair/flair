@@ -4,6 +4,7 @@
 #include "flair/internal/services/IWindowService.h"
 
 #include "SDL.h"
+#undef ERROR
 
 #include <string>
 

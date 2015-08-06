@@ -7,6 +7,7 @@
 #include "flair/internal/ConcurrentQueue.h"
 
 #include "uv.h"
+#undef ERROR
 
 #include <thread>
 #include <atomic>

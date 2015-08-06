@@ -6,8 +6,8 @@
 
 namespace flair {
    
-   struct allocator;
-   
+   class allocator;
+
    class Object : public std::enable_shared_from_this<Object>
    {
       friend class flair::allocator;

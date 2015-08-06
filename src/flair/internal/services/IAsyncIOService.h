@@ -51,7 +51,7 @@ namespace services {
       {
          bool exists;
          bool isDirectory;
-         uint64_t size;
+         size_t size;
          std::time_t created;
          std::time_t modified;
       };

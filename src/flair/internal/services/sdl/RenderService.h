@@ -4,6 +4,7 @@
 #include "flair/internal/services/IRenderService.h"
 
 #include "SDL.h"
+#undef ERROR
 
 namespace flair {
 namespace internal {

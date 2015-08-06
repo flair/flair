@@ -41,6 +41,8 @@ namespace net {
    public:
       void load();
       
+      void lookup();
+      
       // TODO: browse, upload, download, save
       
    protected:

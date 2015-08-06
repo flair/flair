@@ -96,6 +96,8 @@ namespace net {
             return;
          }
          
+         dispatchEvent(flair::make_shared<Event>(Event::INIT));
+         
          // Open the file
          fileService->open(_path, 0, std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
             if (request->error() != 0) {
@@ -135,6 +137,27 @@ namespace net {
                });
             });
          });
+      });
+   }
+   
+   void FileReference::lookup()
+   {
+      fileService->stat(_path, std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
+         auto stats = request->stats();
+         _exists = stats.exists;
+         if (_exists) {
+            _isDirectory = stats.isDirectory;
+            _size = stats.size;
+            _creationDate = stats.created;
+            _modificationDate = stats.modified;
+         }
+         
+         if (_exists) {
+            dispatchEvent(flair::make_shared<Event>(Event::INIT));
+         }
+         else {
+            dispatchEvent(flair::make_shared<Event>(Event::ERROR));
+         }
       });
    }
    

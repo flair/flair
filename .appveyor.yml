@@ -21,6 +21,3 @@ notifications:
     auth_token:
       secure: ChtIO8aIRsiIxV3qvebjV/mDk/DnPWaSm3yPXpvP8bKy4pz5dzJOtOWtlUFqzyyg
     channel: '#ci'
-    on_build_success: true
-    on_build_failure: true
-    on_build_status_changed: false

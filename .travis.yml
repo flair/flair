@@ -1,46 +1,20 @@
+os: osx
+
 language: cpp
 
 compiler: clang
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y libaudio-dev
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
-  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 50
-  - if [ ${CC} == "clang" ]; then
-    export CC=/usr/bin/clang-3.6 CXX=/usr/bin/clang++-3.6;
-    fi
+  - brew update
+  - brew outdated xctool || brew upgrade xctool
 
-install: ./build/linux
+install: ./build/xcode
 
-script: make tests && ./bin/Debug/tests
+script: script: xctool -workspace flair.xcworkspace -scheme tests build && ./bin/Debug/tests
 
 branches:
    only:
       - master
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-    packages:
-      - gcc-5
-      - g++-5
-      - clang-3.6
-      - libasound2-dev
-      - libpulse-dev
-      - libaudio-dev
-      - libx11-dev
-      - libxext-dev
-      - libxrandr-dev
-      - libxcursor-dev
-      - libxi-dev
-      - libxinerama-dev
-      - libxxf86vm-dev
-      - libxss-dev
-      - libgl1-mesa-dev
-      - libesd0-dev
 
 notifications:
    email: false

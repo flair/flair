@@ -106,65 +106,6 @@ namespace uv {
       }
    }
    
-   std::string FileService::applicationDirectory()
-   {
-      std::string path;
-      
-#ifdef FLAIR_PLATFORM_MAC
-      char buffer[2048];
-      uint32_t size = 0;
-      
-      _NSGetExecutablePath(buffer, &size);
-      int ret = _NSGetExecutablePath(buffer, &size);
-      assert(ret != -1);
-      
-      path = std::string(buffer, size);
-      path = path.substr(0, path.find_last_of("/")) + "/Resources";
-      
-#elif FLAIR_PLATFORM_WINDOWS
-      
-      
-#elif FLAIR_PLATFORM_LINUX
-      
-      
-#endif
-      
-      return path;
-   }
-   
-   std::string FileService::applicationStorageDirectory()
-   {
-      return "";
-   }
-   
-   std::string FileService::cacheDirectory()
-   {
-      return "";
-   }
-   
-   std::string FileService::desktopDirectory()
-   {
-      return "";
-   }
-   
-   std::string FileService::documentsDirectory()
-   {
-      return "";
-   }
-   
-   std::string FileService::userDirectory()
-   {
-      return "";
-   }
-   
-   std::string FileService::seperator()
-   {
-#if FLAIR_PLATFORM_WINDOWS
-      return "\\";
-#endif
-      return "/";
-   }
-   
    
 // AsyncFileRequest
    

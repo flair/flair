@@ -87,6 +87,10 @@ project "flair"
 
    files { "include/**.h", "src/**.h", "src/**.cc" }
 
+   filter { "action:xcode*" }
+      files { "src/**.mm" }
+   filter {}
+
    include "./build/libuv.lua"
 
    include "./build/libsdl.lua"

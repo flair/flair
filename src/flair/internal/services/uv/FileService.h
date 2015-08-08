@@ -88,21 +88,7 @@ namespace uv {
       void read(IAsyncFileRequest::FileHandle file, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback) override;
       
       void write(IAsyncFileRequest::FileHandle file, uint8_t * buffer, uint8_t length, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback) override;
-      
-      std::string applicationDirectory() override;
-      
-      std::string applicationStorageDirectory() override;
-      
-      std::string cacheDirectory() override;
-      
-      std::string desktopDirectory() override;
-      
-      std::string documentsDirectory() override;
-      
-      std::string userDirectory() override;
-      
-      std::string seperator() override;
-      
+            
    protected:
       void onAsyncIORequest(std::shared_ptr<flair::events::Event> event);
       

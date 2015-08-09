@@ -28,6 +28,10 @@
 #include "flair/internal/services/mac/PlatformService.h"
 #endif
 
+#ifdef FLAIR_PLATFORM_WINDOWS
+#include "flair/internal/services/windows/PlatformService.h"
+#endif
+
 #include <chrono>
 
 namespace flair {
@@ -67,6 +71,10 @@ namespace desktop {
 #ifdef FLAIR_PLATFORM_MAC
       platformService = new mac::PlatformService();
 #endif
+
+#ifdef FLAIR_PLATFORM_WINDOWS
+      platformService = new windows::PlatformService();
+#endif
       
       // Setup dependency services
       fileService->init(asyncIOService);
@@ -95,6 +103,10 @@ namespace desktop {
       
 #ifdef FLAIR_PLATFORM_MAC
       delete static_cast<mac::PlatformService*>(platformService);
+#endif
+
+#ifdef FLAIR_PLATFORM_WINDOWS
+      delete static_cast<windows::PlatformService*>(platformService);
 #endif
    }
    

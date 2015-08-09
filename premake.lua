@@ -148,4 +148,4 @@ project "reference"
       links { "dl", "m", "rt", "pthread" }
 
    filter { "action:vs*" }
-      links { "imm32", "oleaut32", "winmm", "version", "advapi32", "iphlpapi", "psapi", "shell32", "userenv", "ws2_32" }
+      links { "imm32", "oleaut32", "winmm", "version", "advapi32", "iphlpapi", "psapi", "shell32", "userenv", "ws2_32", "shlwapi" }

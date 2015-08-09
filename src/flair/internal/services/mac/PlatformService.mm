@@ -8,7 +8,7 @@ namespace mac {
    
    std::string PlatformService::os()
    {
-      char operatingSystem[16] = { 0 };
+      char operatingSystem[24] = { 0 };
       NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
       snprintf(operatingSystem, sizeof(operatingSystem), "Mac OS %ld.%ld", (long)version.majorVersion, (long)version.minorVersion);
       

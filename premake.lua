@@ -89,6 +89,14 @@ project "flair"
 
    filter { "action:xcode*" }
       files { "src/**.mm" }
+      excludes { "src/flair/internal/services/windows/**" }
+
+   filter { "action:vs*" }
+      excludes { "src/flair/internal/services/mac/**" }
+
+   filter { "action:gmake*" }
+      excludes { "src/flair/internal/services/mac/**", "src/flair/internal/services/windows/**" }
+
    filter {}
 
    include "./build/libuv.lua"

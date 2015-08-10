@@ -11,6 +11,7 @@
 #include "flair/internal/services/IGamepadService.h"
 #include "flair/internal/services/IAsyncIOService.h"
 #include "flair/internal/services/IFileService.h"
+#include "flair/internal/services/IPlatformService.h"
 
 #ifdef FLAIR_PLATFORM_SDL
 #include "flair/internal/services/sdl/WindowService.h"
@@ -21,6 +22,14 @@
 #ifdef FLAIR_IO_UV
 #include "flair/internal/services/uv/AsyncIOService.h"
 #include "flair/internal/services/uv/FileService.h"
+#endif
+
+#ifdef FLAIR_PLATFORM_MAC
+#include "flair/internal/services/mac/PlatformService.h"
+#endif
+
+#ifdef FLAIR_PLATFORM_WINDOWS
+#include "flair/internal/services/windows/PlatformService.h"
 #endif
 
 #include <chrono>
@@ -43,6 +52,7 @@ namespace desktop {
       gamepadService = nullptr;
       asyncIOService = nullptr;
       fileService = nullptr;
+      platformService = nullptr;
       
 #ifdef FLAIR_PLATFORM_SDL
       windowService = new sdl::WindowService();
@@ -58,12 +68,21 @@ namespace desktop {
       fileService = new uv::FileService();
 #endif
       
+#ifdef FLAIR_PLATFORM_MAC
+      platformService = new mac::PlatformService();
+#endif
+
+#ifdef FLAIR_PLATFORM_WINDOWS
+      platformService = new windows::PlatformService();
+#endif
+      
       // Setup dependency services
       fileService->init(asyncIOService);
       
       // Inject services into the public api
       ui::Keyboard::keyboardService = keyboardService;
       net::FileReference::fileService = fileService;
+      net::FileReference::platformService = platformService;
    }
    
    NativeApplication::~NativeApplication()
@@ -80,6 +99,14 @@ namespace desktop {
 #ifdef FLAIR_IO_UV
       delete static_cast<uv::AsyncIOService*>(asyncIOService);
       delete static_cast<uv::FileService*>(fileService);
+#endif
+      
+#ifdef FLAIR_PLATFORM_MAC
+      delete static_cast<mac::PlatformService*>(platformService);
+#endif
+
+#ifdef FLAIR_PLATFORM_WINDOWS
+      delete static_cast<windows::PlatformService*>(platformService);
 #endif
    }
    

@@ -25,7 +25,17 @@ namespace filesystem {
       
    public:
       static std::shared_ptr<File> applicationDirectory();
-
+      
+      static std::shared_ptr<File> applicationStorageDirectory();
+      
+      static std::shared_ptr<File> cacheDirectory();
+      
+      static std::shared_ptr<File> desktopDirectory();
+      
+      static std::shared_ptr<File> documentsDirectory();
+      
+      static std::shared_ptr<File> userDirectory();
+      
       static std::string seperator();
    };
    

@@ -25,20 +25,6 @@ namespace services {
       virtual void read(IAsyncFileRequest::FileHandle file, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback) = 0;
       
       virtual void write(IAsyncFileRequest::FileHandle file, uint8_t * buffer, uint8_t length, std::shared_ptr<flair::net::FileReference> fileReference, std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback) = 0;
-      
-      virtual std::string applicationDirectory() = 0;
-      
-      virtual std::string applicationStorageDirectory() = 0;
-      
-      virtual std::string cacheDirectory() = 0;
-      
-      virtual std::string desktopDirectory() = 0;
-      
-      virtual std::string documentsDirectory() = 0;
-      
-      virtual std::string userDirectory() = 0;
-      
-      virtual std::string seperator() = 0;
    };
    
 }}}

@@ -1,6 +1,6 @@
 #include "flair/net/FileReference.h"
-#include "flair/internal/services/IAsyncIOService.h"
 #include "flair/internal/services/IFileService.h"
+#include "flair/internal/services/IPlatformService.h"
 
 #include <cassert>
 #include <ctime>
@@ -18,6 +18,7 @@ namespace net {
    using namespace flair::events;
    
    flair::internal::services::IFileService * FileReference::fileService = nullptr;
+   flair::internal::services::IPlatformService * FileReference::platformService = nullptr;
    
    FileReference::FileReference() : _state(FileState::FILE_EMPTY), _path(""), _data(nullptr), _exists(false), _isDirectory(false), _size(0), _creationDate(std::time(nullptr)), _modificationDate(std::time(nullptr))
    {

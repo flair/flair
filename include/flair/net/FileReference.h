@@ -10,6 +10,7 @@
 
 namespace flair { namespace desktop { class NativeApplication; } }
 namespace flair { namespace internal { namespace services { class IFileService; } } }
+namespace flair { namespace internal { namespace services { class IPlatformService; } } }
 
 namespace flair {
 namespace net {
@@ -60,6 +61,7 @@ namespace net {
    protected:
       friend class flair::desktop::NativeApplication;
       static flair::internal::services::IFileService * fileService;
+      static flair::internal::services::IPlatformService * platformService;
    };
    
 }}

@@ -1,11 +1,20 @@
 #include "flair/utils/ByteArray.h"
 
+#include "zlib.h"
+
 #include <ios>
 #include <cassert>
 #include <cstring>
 
 namespace {
    bool isBigEndian = *(uint16_t *)"\0\xff" < 0x100;
+   
+   static const uint32_t ZLIB_HEADER = (('Z') + ('L'<<8) + ('I'<<16) + ('B'<<24));
+   struct ZlibHeader {
+      ZlibHeader(uint64_t length) : header(ZLIB_HEADER), length(length) {};
+      uint32_t header;
+      uint64_t length;
+   };
 }
 
 namespace flair {
@@ -105,12 +114,50 @@ namespace utils {
    
    void ByteArray::compress(Compression algorithm)
    {
-      // TODO: Compression
+      if (algorithm != Compression::ZLIB) throw std::ios_base::failure("Unsupported Compression Algorithm");
+      
+      size_t inLength = _length;
+      ZlibHeader header(inLength);
+      
+      size_t compressedLength = compressBound(inLength);
+      
+      size_t size = (((compressedLength + sizeof(ZlibHeader)) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+      uint8_t * out = new uint8_t[size];
+      memcpy(out, &header, sizeof(ZlibHeader));
+      uint8_t * outData = &out[sizeof(ZlibHeader)];
+      
+      int res = ::compress(outData, &compressedLength, _byteArray, inLength);
+      
+      assert(res == Z_OK);
+      if (res != Z_OK) throw std::ios_base::failure("Error compressing source");
+      
+      delete[] _byteArray;
+      _byteArray = out;
+      _byteArrayLength = size;
+      
+      _position = _length = compressedLength;
    }
    
    void ByteArray::uncompress(Compression algorithm)
    {
-      // TODO: Compression
+      if (algorithm != Compression::ZLIB) throw std::ios_base::failure("Unsupported Compression Algorithm");
+      
+      ZlibHeader * header = (ZlibHeader*)_byteArray;
+      assert(header->header == ZLIB_HEADER);
+      if (header->header != ZLIB_HEADER) throw std::ios_base::failure("Invalid format");
+      
+      size_t size = (((header->length) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+      size_t length = header->length;
+      uint8_t * out = new uint8_t[size];
+      int res = ::uncompress(out, &length, &_byteArray[sizeof(ZlibHeader)], _length);
+      
+      assert(res == Z_OK);
+      if (res != Z_OK) throw std::ios_base::failure("Error uncompressing source");
+      
+      _byteArray = out;
+      _byteArrayLength = size;
+      
+      _position = _length = header->length;
    }
    
    std::string ByteArray::toString() const

@@ -59,4 +59,22 @@ namespace {
          EXPECT_EQ(i % 2 ? INT64_MIN : INT64_MAX, bytes->readLong());
       }
    }
+   
+   TEST_F(ByteArrayTest, Compress)
+   {
+      auto bytes = flair::make_shared<ByteArray>();
+      bytes->writeInt(100);
+      bytes->writeInt(200);
+      bytes->writeBoolean(true);
+      bytes->writeFloat(1234.12345f);
+      
+      bytes->compress();
+      bytes->uncompress();
+      bytes->position(0);
+      
+      EXPECT_EQ(100, bytes->readInt());
+      EXPECT_EQ(200, bytes->readInt());
+      EXPECT_EQ(true, bytes->readBoolean());
+      EXPECT_FLOAT_EQ(1234.12345f, bytes->readFloat());
+   }
 }

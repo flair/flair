@@ -7,3 +7,6 @@
 [submodule "vendor/sdl"]
 	path = vendor/sdl
 	url = https://github.com/spurious/SDL-mirror.git
+[submodule "vendor/zlib"]
+	path = vendor/zlib
+	url = https://thejustinwalsh@github.com/flair/zlib.git

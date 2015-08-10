@@ -119,7 +119,7 @@ namespace utils {
       size_t inLength = _length;
       ZlibHeader header(inLength);
       
-      size_t compressedLength = compressBound(inLength);
+      uLong compressedLength = compressBound(inLength);
       
       size_t size = (((compressedLength + sizeof(ZlibHeader)) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
       uint8_t * out = new uint8_t[size];
@@ -135,7 +135,7 @@ namespace utils {
       _byteArray = out;
       _byteArrayLength = size;
       
-      _position = _length = compressedLength;
+      _position = _length = (size_t)compressedLength;
    }
    
    void ByteArray::uncompress(Compression algorithm)
@@ -147,7 +147,7 @@ namespace utils {
       if (header->header != ZLIB_HEADER) throw std::ios_base::failure("Invalid format");
       
       size_t size = (((header->length) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
-      size_t length = header->length;
+      uLongf length = (uLongf)header->length;
       uint8_t * out = new uint8_t[size];
       int res = ::uncompress(out, &length, &_byteArray[sizeof(ZlibHeader)], _length);
       

@@ -4,13 +4,9 @@ os:
 
 language: cpp
 
-before_install:
-  - brew update
-  - brew outdated xctool || brew upgrade xctool
-
 install: ./build/xcode
 
-script: xctool -workspace flair.xcworkspace -scheme tests build && ./bin/Debug/tests
+script: xcodebuild -workspace flair.xcworkspace -scheme tests && ./bin/Debug/tests
 
 branches:
    only:

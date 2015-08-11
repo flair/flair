@@ -1,4 +1,6 @@
-os: osx
+sudo: false
+os:
+  - osx
 
 language: cpp
 

@@ -4,6 +4,10 @@ os:
 
 language: cpp
 
+before_install:
+  - rvm use 2.1.2
+  - gem install xcodeproj
+
 install: ./build/travis
 
 script: xctool -workspace flair.xcworkspace -scheme tests build && ./bin/Debug/tests

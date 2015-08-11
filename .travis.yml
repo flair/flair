@@ -4,9 +4,9 @@ os:
 
 language: cpp
 
-install: ./build/xcode
+install: ./build/travis
 
-script: xcodebuild -workspace flair.xcworkspace -scheme tests && ./bin/Debug/tests
+script: xctool -workspace flair.xcworkspace -scheme tests build && ./bin/Debug/tests
 
 branches:
    only:

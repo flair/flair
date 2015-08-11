@@ -22,9 +22,9 @@ namespace utils {
       
    public:
       enum class Compression {
-         ZLIB,
          DEFLATE,
-         LZMA
+         ZLIB,
+         GZIP
       };
       
    // Properties

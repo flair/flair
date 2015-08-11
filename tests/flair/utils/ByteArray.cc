@@ -60,7 +60,7 @@ namespace {
       }
    }
    
-   TEST_F(ByteArrayTest, Compress)
+   TEST_F(ByteArrayTest, CompressDeflate)
    {
       auto bytes = flair::make_shared<ByteArray>();
       bytes->writeInt(100);
@@ -68,13 +68,78 @@ namespace {
       bytes->writeBoolean(true);
       bytes->writeFloat(1234.12345f);
       
-      bytes->compress();
-      bytes->uncompress();
-      bytes->position(0);
+      bytes->compress(ByteArray::Compression::DEFLATE);
+      bytes->uncompress(ByteArray::Compression::DEFLATE);
       
       EXPECT_EQ(100, bytes->readInt());
       EXPECT_EQ(200, bytes->readInt());
       EXPECT_EQ(true, bytes->readBoolean());
       EXPECT_FLOAT_EQ(1234.12345f, bytes->readFloat());
    }
+   
+   TEST_F(ByteArrayTest, CompressZlib)
+   {
+      auto bytes = flair::make_shared<ByteArray>();
+      bytes->writeInt(100);
+      bytes->writeInt(200);
+      bytes->writeBoolean(true);
+      bytes->writeFloat(1234.12345f);
+      
+      bytes->compress(ByteArray::Compression::ZLIB);
+      bytes->uncompress(ByteArray::Compression::ZLIB);
+      
+      EXPECT_EQ(100, bytes->readInt());
+      EXPECT_EQ(200, bytes->readInt());
+      EXPECT_EQ(true, bytes->readBoolean());
+      EXPECT_FLOAT_EQ(1234.12345f, bytes->readFloat());
+   }
+   
+   TEST_F(ByteArrayTest, CompressGzip)
+   {
+      auto bytes = flair::make_shared<ByteArray>();
+      bytes->writeInt(100);
+      bytes->writeInt(200);
+      bytes->writeBoolean(true);
+      bytes->writeFloat(1234.12345f);
+      
+      bytes->compress(ByteArray::Compression::GZIP);
+      bytes->uncompress(ByteArray::Compression::GZIP);
+      
+      EXPECT_EQ(100, bytes->readInt());
+      EXPECT_EQ(200, bytes->readInt());
+      EXPECT_EQ(true, bytes->readBoolean());
+      EXPECT_FLOAT_EQ(1234.12345f, bytes->readFloat());
+   }
+   
+   TEST_F(ByteArrayTest, CompressLarge)
+   {
+      auto bytes = flair::make_shared<ByteArray>();
+      const size_t ITERATIONS = 1000000; // 4 * ITERAIONS = 4 MB
+
+      for (int i = 0; i < ITERATIONS; ++i) {
+         bytes->writeInt(i * 2);
+      }
+
+      bytes->compress(ByteArray::Compression::DEFLATE);
+      bytes->uncompress(ByteArray::Compression::DEFLATE);
+      
+      for (int i = 0; i < ITERATIONS; ++i) {
+         EXPECT_EQ(i * 2, bytes->readInt());
+      }
+      
+      bytes->compress(ByteArray::Compression::ZLIB);
+      bytes->uncompress(ByteArray::Compression::ZLIB);
+      
+      for (int i = 0; i < ITERATIONS; ++i) {
+         EXPECT_EQ(i * 2, bytes->readInt());
+      }
+      
+      bytes->compress(ByteArray::Compression::GZIP);
+      bytes->uncompress(ByteArray::Compression::GZIP);
+      
+      for (int i = 0; i < ITERATIONS; ++i) {
+         EXPECT_EQ(i * 2, bytes->readInt());
+      }
+   }
+
 }

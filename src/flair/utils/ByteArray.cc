@@ -8,13 +8,6 @@
 
 namespace {
    bool isBigEndian = *(uint16_t *)"\0\xff" < 0x100;
-   
-   static const uint32_t ZLIB_HEADER = (('Z') + ('L'<<8) + ('I'<<16) + ('B'<<24));
-   struct ZlibHeader {
-      ZlibHeader(uint64_t length) : header(ZLIB_HEADER), length(length) {};
-      uint32_t header;
-      uint64_t length;
-   };
 }
 
 namespace flair {
@@ -114,50 +107,94 @@ namespace utils {
    
    void ByteArray::compress(Compression algorithm)
    {
-      if (algorithm != Compression::ZLIB) throw std::ios_base::failure("Unsupported Compression Algorithm");
+      auto target = flair::make_shared<ByteArray>();
+      const size_t BUFFER_SIZE = 128 * 1024;
+      uint8_t temp[BUFFER_SIZE];
       
-      size_t inLength = _length;
-      ZlibHeader header(inLength);
+      // Setup our stream
+      z_stream strm;
+      strm.zalloc = Z_NULL;
+      strm.zfree = Z_NULL;
+      strm.opaque = Z_NULL;
+      strm.avail_in = _length;
+      strm.next_in = _byteArray;
       
-      uLong compressedLength = compressBound(inLength);
+      // Initialize the deflate structure w/ either DEFLATE or ZLIB compression
+      int windowBits = -MAX_WBITS;
+      if (algorithm == Compression::ZLIB) windowBits = MAX_WBITS;
+      if (algorithm == Compression::GZIP) windowBits = MAX_WBITS | 16;
+      int ret = deflateInit2(&strm, Z_BEST_COMPRESSION, Z_DEFLATED, windowBits, 8, Z_DEFAULT_STRATEGY);
+      assert(ret == Z_OK);
+      if (ret != Z_OK) throw std::ios_base::failure("Initialization error");
       
-      size_t size = (((compressedLength + sizeof(ZlibHeader)) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
-      uint8_t * out = new uint8_t[size];
-      memcpy(out, &header, sizeof(ZlibHeader));
-      uint8_t * outData = &out[sizeof(ZlibHeader)];
+      // Loop over the data writing the compressed stream to target
+      do {
+         strm.next_out = temp;
+         strm.avail_out = BUFFER_SIZE;
+         
+         ret = deflate(&strm, Z_FINISH);
+         assert(ret != Z_STREAM_ERROR);
+         
+         if (target->length() < strm.total_out) {
+            target->writeBytes(temp, 0, strm.total_out - target->length());
+         }
+      } while (ret == Z_OK);
+      deflateEnd(&strm);
       
-      int res = ::compress(outData, &compressedLength, _byteArray, inLength);
+      // Move the _byteArray over
+      delete _byteArray;
+      _byteArray = target->_byteArray;
+      _byteArrayLength = target->_byteArrayLength;
+      _length = target->_length;
+      target->_byteArray = nullptr;
       
-      assert(res == Z_OK);
-      if (res != Z_OK) throw std::ios_base::failure("Error compressing source");
-      
-      delete[] _byteArray;
-      _byteArray = out;
-      _byteArrayLength = size;
-      
-      _position = _length = (size_t)compressedLength;
+      _position = _length;
    }
    
    void ByteArray::uncompress(Compression algorithm)
    {
-      if (algorithm != Compression::ZLIB) throw std::ios_base::failure("Unsupported Compression Algorithm");
+      auto target = flair::make_shared<ByteArray>();
+      const size_t BUFFER_SIZE = 128 * 1024;
+      uint8_t temp[BUFFER_SIZE];
       
-      ZlibHeader * header = (ZlibHeader*)_byteArray;
-      assert(header->header == ZLIB_HEADER);
-      if (header->header != ZLIB_HEADER) throw std::ios_base::failure("Invalid format");
+      // Setup our stream
+      z_stream strm;
+      strm.zalloc = Z_NULL;
+      strm.zfree = Z_NULL;
+      strm.opaque = Z_NULL;
+      strm.next_in = _byteArray;
+      strm.avail_in = _length;
       
-      size_t size = (((header->length) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
-      uLongf length = (uLongf)header->length;
-      uint8_t * out = new uint8_t[size];
-      int res = ::uncompress(out, &length, &_byteArray[sizeof(ZlibHeader)], _length);
+      // Set the window bits for either GZIP or ZLIB
+      int windowBits = -MAX_WBITS;
+      if (algorithm == Compression::ZLIB) windowBits = MAX_WBITS;
+      if (algorithm == Compression::GZIP) windowBits = MAX_WBITS | 16;
+      int ret = inflateInit2(&strm, windowBits);
+      assert(ret == Z_OK);
+      if (ret != Z_OK) throw std::ios_base::failure("Initialization error");
       
-      assert(res == Z_OK);
-      if (res != Z_OK) throw std::ios_base::failure("Error uncompressing source");
+      // Loop over the data writing the compressed stream to target
+      do {
+         strm.next_out = temp;
+         strm.avail_out = BUFFER_SIZE;
+         
+         ret = inflate(&strm, Z_NO_FLUSH);
+         assert(ret != Z_STREAM_ERROR);
+         
+         if (target->length() < strm.total_out) {
+            target->writeBytes(temp, 0, strm.total_out - target->length());
+         }
+      } while (ret == Z_OK);
+      inflateEnd(&strm);
       
-      _byteArray = out;
-      _byteArrayLength = size;
+      // Move the _byteArray over
+      delete _byteArray;
+      _byteArray = target->_byteArray;
+      _byteArrayLength = target->_byteArrayLength;
+      _length = target->_length;
+      target->_byteArray = nullptr;
       
-      _position = _length = header->length;
+      _position = 0;
    }
    
    std::string ByteArray::toString() const
@@ -402,7 +439,7 @@ namespace utils {
    {
       length(_position + len);
       
-      memcpy(_byteArray, &bytes[offset], len);
+      memcpy(&_byteArray[_position], &bytes[offset], len);
       _position += len;
    }
    

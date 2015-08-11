@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd ${0%/*}
+./premake5.osx --file=../premake.lua xcode4
+
+rm -rf ./flair.xcodeproj/xcuserdata/*.xcuserdatad/xcschemes
+rm -rf ./tests.xcodeproj/xcuserdata/*.xcuserdatad/xcschemes
+
+echo "
+ require 'xcodeproj'
+ project = Xcodeproj::Project.open '../flair.xcodeproj'
+ project.recreate_user_schemes
+ project.save
+ project = Xcodeproj::Project.open '../tests.xcodeproj'
+ project.recreate_user_schemes
+ project.save
+" | ruby

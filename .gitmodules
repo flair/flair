@@ -9,4 +9,7 @@
 	url = https://github.com/spurious/SDL-mirror.git
 [submodule "vendor/zlib"]
 	path = vendor/zlib
-	url = https://thejustinwalsh@github.com/flair/zlib.git
+	url = https://github.com/flair/zlib.git
+[submodule "vendor/libpng"]
+	path = vendor/libpng
+	url = https://github.com/flair/libpng.git

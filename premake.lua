@@ -102,8 +102,10 @@ project "flair"
    include "./build/libuv.lua"
 
    include "./build/libsdl.lua"
-   
+
    include "./build/zlib.lua"
+
+   include "./build/libpng.lua"
 
 project "tests"
    kind "ConsoleApp"

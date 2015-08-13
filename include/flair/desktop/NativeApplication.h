@@ -17,9 +17,10 @@ namespace flair {
          class IMouseService;
          class ITouchService;
          class IGamepadService;
+         class IPlatformService;
          class IAsyncIOService;
          class IFileService;
-         class IPlatformService;
+         class IWorkerService;
       }
    }
    
@@ -157,9 +158,11 @@ namespace flair {
          flair::internal::services::IMouseService * mouseService;
          flair::internal::services::ITouchService * touchService;
          flair::internal::services::IGamepadService * gamepadService;
+         flair::internal::services::IPlatformService * platformService;
          flair::internal::services::IAsyncIOService * asyncIOService;
          flair::internal::services::IFileService * fileService;
-         flair::internal::services::IPlatformService * platformService;
+         flair::internal::services::IWorkerService * workerService;
+         
       };
       
    }

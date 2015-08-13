@@ -1,17 +1,19 @@
 #ifndef flair_internal_services_windows_PlatformService_h
 #define flair_internal_services_windows_PlatformService_h
 
-#include "flair/internal/services/IPlatformService.h"
+#include "flair/internal/services/base/PlatformService.h"
 
 namespace flair {
 namespace internal {
 namespace services {
 namespace windows {
    
-   class PlatformService : public IPlatformService
+   class PlatformService : public base::PlatformService
    {
    public:
       std::string os() override;
+      
+      std::string userAgent() override;
       
       std::string language() override;
       

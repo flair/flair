@@ -1,11 +1,15 @@
 #ifndef flair_flair_h
 #define flair_flair_h
 
+#include <cassert>
 #include <cstdint>
 #include <type_traits>
 #include <memory>
+#include <functional>
 #include <string>
 #include <iostream>
+#include <vector>
+#include <map>
 
 #include "flair/Object.h"
 #include "flair/JSON.h"

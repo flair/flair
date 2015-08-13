@@ -13,6 +13,8 @@ namespace services {
    public:
       virtual std::string os() = 0;
       
+      virtual std::string userAgent() = 0;
+      
       virtual std::string language() = 0;
       
       virtual std::vector<std::string> languages() = 0;
@@ -30,6 +32,11 @@ namespace services {
       virtual std::string userDirectory() = 0;
       
       virtual std::string directorySeperator() = 0;
+      
+      virtual std::string urlToPath(std::string url) = 0;
+      
+      virtual std::string pathToUrl(std::string path) = 0;
+
    };
    
 }}}

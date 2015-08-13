@@ -23,6 +23,11 @@ namespace windows {
       return operatingSystem;
    }
    
+   std::string PlatformService::userAgent()
+   {
+      return "Mozilla/5.0 (Windows; U; en) AppleWebKit/526.9+ (KHTML, like Gecko) flair/1.0";
+   }
+   
    std::string PlatformService::language()
    {
       char languageName[12];

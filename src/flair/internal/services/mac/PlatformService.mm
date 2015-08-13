@@ -14,6 +14,11 @@ namespace mac {
       
       return operatingSystem;
    }
+   
+   std::string PlatformService::userAgent()
+   {
+      return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en) AppleWebKit/526.9+ (KHTML, like Gecko) flair/1.0";
+   }
 
    std::string PlatformService::language()
    {

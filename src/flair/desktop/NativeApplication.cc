@@ -3,6 +3,7 @@
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
 #include "flair/net/FileReference.h"
+#include "flair/net/URLRequest.h"
 #include "flair/internal/services/IWindowService.h"
 #include "flair/internal/services/IRenderService.h"
 #include "flair/internal/services/IKeyboardService.h"
@@ -22,6 +23,7 @@
 #ifdef FLAIR_IO_UV
 #include "flair/internal/services/uv/AsyncIOService.h"
 #include "flair/internal/services/uv/FileService.h"
+#include "flair/internal/services/uv/WorkerService.h"
 #endif
 
 #ifdef FLAIR_PLATFORM_MAC
@@ -50,9 +52,10 @@ namespace desktop {
       mouseService = nullptr;
       touchService = nullptr;
       gamepadService = nullptr;
+      platformService = nullptr;
       asyncIOService = nullptr;
       fileService = nullptr;
-      platformService = nullptr;
+      workerService = nullptr;
       
 #ifdef FLAIR_PLATFORM_SDL
       windowService = new sdl::WindowService();
@@ -66,6 +69,7 @@ namespace desktop {
 #ifdef FLAIR_IO_UV
       asyncIOService = new uv::AsyncIOService();
       fileService = new uv::FileService();
+      workerService = new uv::WorkerService();
 #endif
       
 #ifdef FLAIR_PLATFORM_MAC
@@ -78,11 +82,13 @@ namespace desktop {
       
       // Setup dependency services
       fileService->init(asyncIOService);
+      workerService->init(asyncIOService);
       
       // Inject services into the public api
       ui::Keyboard::keyboardService = keyboardService;
       net::FileReference::fileService = fileService;
       net::FileReference::platformService = platformService;
+      net::URLRequest::platformService = platformService;
    }
    
    NativeApplication::~NativeApplication()

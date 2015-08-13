@@ -1,14 +1,5 @@
 #include "flair/internal/services/uv/FileService.h"
 
-#ifdef FLAIR_PLATFORM_MAC
-#include <mach-o/dyld.h>
-#include <stdlib.h>
-#elif FLAIR_PLATFORM_WINDOWS
-
-#elif FLAIR_PLATFORM_LINUX
-
-#endif
-
 namespace flair {
 namespace internal {
 namespace services {
@@ -87,6 +78,7 @@ namespace uv {
       auto asyncEvent = std::dynamic_pointer_cast<AsyncIOEvent>(event);
       auto asyncRequest = asyncEvent->request();
       auto fileRequest = std::dynamic_pointer_cast<AsyncFileRequest>(asyncRequest);
+      if (!fileRequest) return;
       
       std::function<void(std::shared_ptr<IAsyncFileRequest>)> callback = nullptr;
       auto fileReference = fileRequest->fileReference();
@@ -110,7 +102,7 @@ namespace uv {
 // AsyncFileRequest
    
    
-   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _id(SIZE_MAX), _error(0), _complete(false), _ptr(nullptr), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
+   AsyncFileRequest::AsyncFileRequest(IAsyncIORequest::Type type, std::shared_ptr<FileReference> fileReference) : _type(type), _id(SIZE_MAX), _error(0), _complete(false), _fileReference(fileReference), _path(""), _handle(-1), _flags(0), _data(nullptr), _offset(0), _length(0)
    {
       _stats.created = std::time(nullptr);
       _stats.modified = std::time(nullptr);

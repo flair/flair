@@ -58,7 +58,6 @@ namespace uv {
       size_t _id;
       int _error;
       bool _complete;
-      void * _ptr;
       std::shared_ptr<flair::net::FileReference> _fileReference;
       std::string _path;
       FileHandle _handle;

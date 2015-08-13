@@ -24,7 +24,8 @@ namespace services {
          FILE_DIR_REMOVE,
          FILE_DIR_MAKE,
          FILE_DIR_MAKE_TEMP,
-         FILE_DIR_SCAN
+         FILE_DIR_SCAN,
+         WORKER
       };
       
    // Properties
@@ -90,6 +91,21 @@ namespace services {
       virtual size_t length(size_t value) = 0;
    };
    
+   class IAsyncWorkerRequest : public IAsyncIORequest
+   {
+   public:
+      struct IWorkerResult
+      {
+      };
+      
+   // Properties
+   public:
+      virtual std::shared_ptr<IWorkerResult> result() = 0;
+      virtual std::shared_ptr<IWorkerResult> result(std::shared_ptr<IWorkerResult> value) = 0;
+      
+      virtual std::function<std::shared_ptr<IWorkerResult>()> worker() = 0;
+      virtual std::function<std::shared_ptr<IWorkerResult>()> worker(std::function<std::shared_ptr<IWorkerResult>()> callable) = 0;
+   };
    
    class AsyncIOEvent : public flair::events::Event
    {

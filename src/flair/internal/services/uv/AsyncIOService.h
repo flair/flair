@@ -4,7 +4,7 @@
 #include "flair/flair.h"
 #include "flair/net/FileReference.h"
 #include "flair/internal/services/IAsyncIOService.h"
-#include "flair/internal/ConcurrentQueue.h"
+#include "flair/internal/utils/ConcurrentQueue.h"
 
 #include "uv.h"
 #undef ERROR
@@ -67,6 +67,7 @@ namespace uv {
             uv_write_t write;
             uv_udp_send_t udp_send;
             uv_fs_t fs;
+            uv_work_t work;
          }; // requests
          
          uv_buf_t buffer;
@@ -108,7 +109,7 @@ namespace uv {
       std::vector<Context> contextPool;
       std::stack<uint32_t> contextStack;
       
-      std::map<uv_fs_t *, std::shared_ptr<IAsyncIORequest>> pendingIORequests;
+      std::map<void *, std::shared_ptr<IAsyncIORequest>> pendingIORequests;
       
    protected:
       uint32_t popContextId();
@@ -125,6 +126,9 @@ namespace uv {
       void readFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
       void writeFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
       void closeFile(uv_fs_t* req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
+      void beginWorker(uv_work_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
+      void endWorker(uv_work_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest);
+
    };
    
 }}}}

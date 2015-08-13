@@ -221,6 +221,38 @@ namespace uv {
             } break;
                
             case IAsyncIORequest::Type::FILE_WRITE: break;
+               
+            case IAsyncIORequest::Type::WORKER: {
+               auto workerRequest = std::dynamic_pointer_cast<IAsyncWorkerRequest>(request);
+               assert(workerRequest); if (!workerRequest) return;
+               
+               size_t id = workerRequest->id();
+               
+               Context * context;
+               if (id == SIZE_MAX) {
+                  auto id = popContextId();
+                  context = &contextPool[id];
+                  context->req.data = this; workerRequest->id(id);
+               }
+               else {
+                  context = &contextPool[id];
+               }
+               pendingIORequests.insert(std::make_pair(&context->work, request));
+               
+               uv_queue_work(uv, &context->work, [](uv_work_t* req) {
+                  auto self = static_cast<AsyncIOService*>(req->data);
+                  auto asyncIORequest = self->pendingIORequests[req];
+                  self->beginWorker(req, asyncIORequest);
+               },
+               [](uv_work_t* req, int status) {
+                  auto self = static_cast<AsyncIOService*>(req->data);
+                  auto asyncIORequest = self->pendingIORequests[req];
+                  self->pendingIORequests.erase(req);
+                  self->endWorker(req, asyncIORequest);
+               });
+               
+            } break;
+            
             default: break;
          }
       }
@@ -312,6 +344,31 @@ namespace uv {
       
       uv_fs_req_cleanup(req);
       pushContextId(fileRequest->id()); fileRequest->id(SIZE_MAX);
+      
+      outboundIORequests.enqueue(asyncIORequest);
+   }
+   
+   void AsyncIOService::beginWorker(uv_work_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest)
+   {
+      auto workerRequest = std::dynamic_pointer_cast<IAsyncWorkerRequest>(asyncIORequest);
+      std::shared_ptr<IAsyncWorkerRequest::IWorkerResult> result = nullptr;
+      
+      try {
+         result = workerRequest->worker()();
+      }
+      catch(...) {
+         workerRequest->error(-1);
+      }
+      
+      workerRequest->result(result);
+   }
+   
+   void AsyncIOService::endWorker(uv_work_t * req, std::shared_ptr<IAsyncIORequest> asyncIORequest)
+   {
+      auto workerRequest = std::dynamic_pointer_cast<IAsyncWorkerRequest>(asyncIORequest);
+      workerRequest->complete(true);
+      
+      pushContextId(workerRequest->id()); workerRequest->id(SIZE_MAX);
       
       outboundIORequests.enqueue(asyncIORequest);
    }

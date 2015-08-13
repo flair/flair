@@ -40,7 +40,7 @@ public:
       std::cout << "Activated" << std::endl;
       
       std::cout << "Application Directory: " << File::applicationDirectory()->name() << std::endl;
-      _file = flair::make_shared<File>("/Users/axon/Projects/C/flair/premake.lua");
+      _file = flair::make_shared<File>("/Users/justin/Projects/C/flair/premake.lua");
       
       _file->addEventListener(Event::COMPLETE, &GameStage::onFileLoaded, this);
       _file->load();

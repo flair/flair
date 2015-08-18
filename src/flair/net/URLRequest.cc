@@ -80,6 +80,13 @@ namespace net {
       return _idleTimeout = value;
    }
    
+   bool URLRequest::isFilePath()
+   {
+      if (_url.find("file:///") || _url.find("app:/") || _url.find("app-storage:/")) return true;
+          
+      return false;
+   }
+   
    bool URLRequest::manageCookies()
    {
       return _manageCookies;

@@ -23,6 +23,8 @@ namespace filesystem {
       
       bool isDirectory();
       
+      std::string url();
+      
    public:
       static std::shared_ptr<File> applicationDirectory();
       

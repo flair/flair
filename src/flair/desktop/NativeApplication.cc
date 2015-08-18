@@ -4,6 +4,9 @@
 #include "flair/events/KeyboardEvent.h"
 #include "flair/net/FileReference.h"
 #include "flair/net/URLRequest.h"
+#include "flair/display/BitmapData.h"
+#include "flair/system/LoaderContext.h"
+#include "flair/display/RenderSupport.h"
 #include "flair/internal/services/IWindowService.h"
 #include "flair/internal/services/IRenderService.h"
 #include "flair/internal/services/IKeyboardService.h"
@@ -89,6 +92,9 @@ namespace desktop {
       net::FileReference::fileService = fileService;
       net::FileReference::platformService = platformService;
       net::URLRequest::platformService = platformService;
+      display::BitmapData::renderService = renderService;
+      display::RenderSupport::renderService = renderService;
+      system::LoaderContext::workerService = workerService;
    }
    
    NativeApplication::~NativeApplication()
@@ -105,6 +111,7 @@ namespace desktop {
 #ifdef FLAIR_IO_UV
       delete static_cast<uv::AsyncIOService*>(asyncIOService);
       delete static_cast<uv::FileService*>(fileService);
+      delete static_cast<uv::WorkerService*>(workerService);
 #endif
       
 #ifdef FLAIR_PLATFORM_MAC
@@ -257,10 +264,14 @@ namespace desktop {
       bool vsync = false;
       if (initialWindow["vsync"].isBool()) vsync = initialWindow["vsync"].bool_value();
       
+      auto renderSupport = new RenderSupport();
+      
       windowService->create(title, geom::Rectangle(x, y, width, height), flags, true);
       renderService->create(windowService, vsync);
       
       windowService->activate();
+      _stage->_stageWidth = width;
+      _stage->_stageHeight = height;
       _stage->dispatchEvent(flair::make_shared<Event>(Event::ACTIVATE, false, false));
       
       auto previousTime = std::chrono::high_resolution_clock::now();
@@ -283,10 +294,13 @@ namespace desktop {
          _stage->tick(deltaTime / 1000.0f);
          
          renderService->clear();
+         _stage->render(renderSupport, _stage->alpha(), geom::Matrix());
          renderService->present();
       }
       
       _stage->dispatchEvent(flair::make_shared<Event>(Event::DEACTIVATE, false, false));
+      
+      delete renderSupport;
    }
       
 }}

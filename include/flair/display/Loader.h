@@ -5,7 +5,7 @@
 #include "flair/display/DisplayObjectContainer.h"
 #include "flair/net/URLRequest.h"
 #include "flair/utils/ByteArray.h"
-#include "flair/display/LoaderContext.h"
+#include "flair/system/LoaderContext.h"
 
 namespace flair {
 namespace display {
@@ -18,19 +18,22 @@ namespace display {
       Loader();
       
    public:
-      virtual ~Loader() = 0;
+      virtual ~Loader();
 
    // Properties
    public:
       std::shared_ptr<DisplayObject> content();
       
+      float width() const override;
+      float height() const override;
+      
    // Methods
    public:
       void close();
       
-      void load(std::shared_ptr<net::URLRequest> request, std::shared_ptr<LoaderContext> context = nullptr);
+      void load(std::shared_ptr<net::URLRequest> request, std::shared_ptr<system::LoaderContext> context = nullptr);
       
-      void loadBytes(std::shared_ptr<utils::ByteArray> request, std::shared_ptr<LoaderContext> context = nullptr);
+      void loadBytes(std::shared_ptr<utils::ByteArray> request, std::shared_ptr<system::LoaderContext> context = nullptr);
       
       void unload();
       
@@ -43,7 +46,8 @@ namespace display {
       void setChildIndex(const std::shared_ptr<DisplayObject>& child, int index) override;
       
    protected:
-      std::shared_ptr<LoaderContext> _loaderContext;
+      std::shared_ptr<system::LoaderContext> _loaderContext;
+      std::shared_ptr<DisplayObject> _content;
    };
    
 }}

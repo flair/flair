@@ -8,7 +8,7 @@ namespace flair {
          
       }
       
-      void EventDispatcher::addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture, int32_t priority)
+      void EventDispatcher::addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture, int32_t priority, bool once)
       {
          std::multimap<std::string, EventListener>::iterator hint = listeners.end();
          
@@ -42,6 +42,8 @@ namespace flair {
             
             dispatched = true;
             //if (event->preventDefault()) dispatched = false;
+            
+            if (eventListener.once) it = listeners.erase(it);
          }
          
          return dispatched;

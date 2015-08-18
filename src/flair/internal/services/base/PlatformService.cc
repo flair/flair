@@ -39,6 +39,31 @@ namespace base {
    
    std::string PlatformService::pathToUrl(std::string path)
    {
+      auto appPrefix = applicationDirectory() + directorySeperator();
+      auto appStoragePrefix = applicationStorageDirectory() + directorySeperator();
+      
+      if (path.find(appStoragePrefix) == 0) {
+         auto rootUrl = std::string("app-storage:/");
+         auto relativeUrl = path.substr(appStoragePrefix.length(), path.length() - appStoragePrefix.length());
+         std::replace(relativeUrl.begin(), relativeUrl.end(), directorySeperator()[0], '/');
+         
+         return rootUrl + relativeUrl;
+      }
+      else if (path.find(appPrefix) == 0) {
+         auto rootUrl = std::string("app:/");
+         auto relativeUrl = path.substr(appPrefix.length(), path.length() - appPrefix.length());
+         std::replace(relativeUrl.begin(), relativeUrl.end(), directorySeperator()[0], '/');
+         
+         return rootUrl + relativeUrl;
+      }
+      else {
+         auto rootUrl = std::string("file:///");
+         auto relativeUrl = path;
+         std::replace(relativeUrl.begin(), relativeUrl.end(), directorySeperator()[0], '/');
+         
+         return rootUrl + relativeUrl;
+      }
+      
       return path;
    }
    

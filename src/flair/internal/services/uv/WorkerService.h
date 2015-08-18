@@ -3,7 +3,6 @@
 
 #include "flair/net/FileReference.h"
 #include "flair/internal/services/IWorkerService.h"
-#include "flair/internal/services/uv/AsyncIOService.h"
 
 #include <map>
 #include <memory>

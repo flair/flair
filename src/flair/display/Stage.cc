@@ -25,7 +25,7 @@ namespace flair {
       
       using flair::events::Event;
       
-      Stage::Stage() : DisplayObjectContainer()
+      Stage::Stage() : DisplayObjectContainer(), _stageWidth(0), _stageHeight(0)
       {
 
       }
@@ -33,6 +33,16 @@ namespace flair {
       Stage::~Stage()
       {
          
+      }
+      
+      int Stage::stageWidth()
+      {
+         return _stageWidth;
+      }
+      
+      int Stage::stageHeight()
+      {
+         return _stageHeight;
       }
       
       void Stage::tick(float deltaSeconds)

@@ -20,7 +20,7 @@ namespace net {
    flair::internal::services::IFileService * FileReference::fileService = nullptr;
    flair::internal::services::IPlatformService * FileReference::platformService = nullptr;
    
-   FileReference::FileReference() : _state(FileState::FILE_EMPTY), _path(""), _data(nullptr), _exists(false), _isDirectory(false), _size(0), _creationDate(std::time(nullptr)), _modificationDate(std::time(nullptr))
+   FileReference::FileReference() : _state(FileState::FILE_EMPTY), _data(nullptr), _exists(false), _isDirectory(false), _size(0), _creationDate(std::time(nullptr)), _modificationDate(std::time(nullptr))
    {
       
    }
@@ -143,6 +143,8 @@ namespace net {
    
    void FileReference::lookup()
    {
+      assert(fileService);
+      
       fileService->stat(_path, std::static_pointer_cast<FileReference>(shared_from_this()), [this](std::shared_ptr<IAsyncFileRequest> request) {
          auto stats = request->stats();
          _exists = stats.exists;

@@ -47,7 +47,7 @@ namespace mac {
    {
       NSString * directoryPath = [[NSBundle mainBundle] bundlePath];
       
-      const char * path = [directoryPath UTF8String];
+      const char * path = [[directoryPath stringByAppendingString: @"/Contents/Resources"] UTF8String] ;
       return path;
    }
 

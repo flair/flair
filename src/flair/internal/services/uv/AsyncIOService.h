@@ -83,7 +83,7 @@ namespace uv {
       void poll() override;
       
    public:
-      void addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false, int32_t priority = 0) override;
+      void addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false, int32_t priority = 0, bool once = false) override;
       
       bool dispatchEvent(std::shared_ptr<flair::events::Event> event) override;
       

@@ -31,75 +31,75 @@ namespace flair {
          
       // Properties
       public:
-         std::string name() const;
-         std::string name(std::string name);
+         virtual std::string name() const;
+         virtual std::string name(std::string name);
          
-         float alpha() const;
-         float alpha(float alpha);
+         virtual float alpha() const;
+         virtual float alpha(float alpha);
          
-         const flair::geom::Rectangle bounds() const;
-         bool hasVisibleArea() const;
+         virtual const flair::geom::Rectangle bounds() const;
+         virtual bool hasVisibleArea() const;
          
-         float height() const;
-         float height(float height);
+         virtual float height() const;
+         virtual float height(float height);
          
-         float width() const;
-         float width(float width);
+         virtual float width() const;
+         virtual float width(float width);
          
-         float x() const;
-         float x(float x);
+         virtual float x() const;
+         virtual float x(float x);
          
-         float y() const;
-         float y(float y);
+         virtual float y() const;
+         virtual float y(float y);
          
-         std::shared_ptr<Stage> stage() const;
+         virtual std::shared_ptr<Stage> stage() const;
          
-         const std::shared_ptr<DisplayObjectContainer> root() const;
-         const std::shared_ptr<DisplayObjectContainer> parent() const;
+         virtual const std::shared_ptr<DisplayObjectContainer> root() const;
+         virtual const std::shared_ptr<DisplayObjectContainer> parent() const;
          
-         flair::geom::Matrix transformationMatrix() const;
-         flair::geom::Matrix transformationMatrix(flair::geom::Matrix m);
+         virtual flair::geom::Matrix transformationMatrix() const;
+         virtual flair::geom::Matrix transformationMatrix(flair::geom::Matrix m);
          
-         float pivotX() const;
-         float pivotX(float pivotX);
+         virtual float pivotX() const;
+         virtual float pivotX(float pivotX);
          
-         float rotation() const;
-         float rotation(float rotation);
+         virtual float rotation() const;
+         virtual float rotation(float rotation);
          
-         float scaleX() const;
-         float scaleX(float scaleX);
+         virtual float scaleX() const;
+         virtual float scaleX(float scaleX);
          
-         float scaleY() const;
-         float scaleY(float scaleY);
+         virtual float scaleY() const;
+         virtual float scaleY(float scaleY);
          
-         float skewX() const;
-         float skewX(float skewX);
+         virtual float skewX() const;
+         virtual float skewX(float skewX);
          
-         float skewY() const;
-         float skewY(float skewY);
+         virtual float skewY() const;
+         virtual float skewY(float skewY);
          
-         bool touchable() const;
-         bool touchable(bool touchable);
+         virtual bool touchable() const;
+         virtual bool touchable(bool touchable);
          
-         bool visible() const;
-         bool visible(bool visible);
+         virtual bool visible() const;
+         virtual bool visible(bool visible);
          
          
       // Methods
       public:
-         flair::geom::Rectangle getBounds(std::shared_ptr<DisplayObject> targetSpace) const;
+         virtual flair::geom::Rectangle getBounds(std::shared_ptr<DisplayObject> targetSpace) const;
          
-         flair::geom::Matrix getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace) const;
+         virtual flair::geom::Matrix getTransformationMatrix(std::shared_ptr<DisplayObject> targetSpace) const;
          
-         flair::geom::Point globalToLocal(flair::geom::Point localPoint) const;
+         virtual flair::geom::Point globalToLocal(flair::geom::Point localPoint) const;
          
-         std::shared_ptr<DisplayObject> hitTest(flair::geom::Point localPoint, bool forTouch = false) const;
+         virtual std::shared_ptr<DisplayObject> hitTest(flair::geom::Point localPoint, bool forTouch = false) const;
          
          
       // Internal Methods
       protected:
          void setParent(std::shared_ptr<DisplayObjectContainer> parent);
-         void render(RenderSupport *support, float parentAlpha);
+         virtual void render(RenderSupport *support, float parentAlpha, geom::Matrix parentTransform);
          
          
       protected:

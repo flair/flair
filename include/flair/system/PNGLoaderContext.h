@@ -12,7 +12,6 @@ namespace system {
    class PNGLoaderContext : public LoaderContext
    {
       friend class flair::allocator;
-      friend class flair::display::Loader;
       
    protected:
       PNGLoaderContext();
@@ -22,7 +21,9 @@ namespace system {
       
    // Internal
    protected:
+      friend class flair::display::Loader;
       void decode(std::shared_ptr<utils::ByteArray> bytes, std::function<void(std::shared_ptr<utils::ByteArray>)> callback) override;
+      void create(std::shared_ptr<utils::ByteArray> bytes, std::function<void(std::shared_ptr<display::DisplayObject>)> callback) override;
    };
    
 }}

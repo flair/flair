@@ -96,6 +96,7 @@ namespace services {
    public:
       struct IWorkerResult
       {
+         virtual ~IWorkerResult() {};
       };
       
    // Properties

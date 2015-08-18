@@ -22,7 +22,7 @@ namespace flair {
          virtual ~EventDispatcher();
          
       public:
-         void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int32_t priority = 0) override;
+         void addEventListener(std::string type, std::function<void(std::shared_ptr<Event>)> listener, bool useCapture = false, int32_t priority = 0, bool once = false) override;
          
          template <class T>
          void addEventListener(std::string type, void (T::*listener)(std::shared_ptr<Event>), std::shared_ptr<T> const& instance, bool useCapture = false, int32_t priority = 0, bool weakReference = false)
@@ -59,12 +59,13 @@ namespace flair {
          struct EventListener
          {
             EventListener(std::function<void(std::shared_ptr<Event>)>&& callback, bool useCapture, int32_t priority)
-               : callback(callback), useCapture(useCapture), priority(priority) {};
+               : callback(callback), useCapture(useCapture), priority(priority), once(false) {};
             bool operator <(const EventListener& rhs) { return rhs.priority >= priority; }
             
             std::function<void(std::shared_ptr<Event>)> callback;
             bool useCapture;
             int32_t priority;
+            bool once;
             
          };
          std::multimap<std::string, EventListener> listeners;

@@ -9,7 +9,8 @@ namespace filesystem {
    
    File::File(std::string path)
    {
-      _path = path;
+      assert(platformService);
+      _path = platformService->urlToPath(path);
    }
    
    File::~File()
@@ -25,6 +26,12 @@ namespace filesystem {
    bool File::isDirectory()
    {
       return _isDirectory;
+   }
+   
+   std::string File::url()
+   {
+      assert(platformService);
+      return platformService->pathToUrl(_path);
    }
    
    std::shared_ptr<File> File::applicationDirectory()

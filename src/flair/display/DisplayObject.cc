@@ -11,7 +11,7 @@ using flair::geom::Point;
 namespace flair {
    namespace display {
       
-      DisplayObject::DisplayObject()
+      DisplayObject::DisplayObject() : _x(0.0f), _y(0.0f), _rotation(0.0f), _scaleX(1.0f), _scaleY(1.0f), _alpha(1.0f), _width(0.0f), _height(0.0f)
       {
          _parent = std::weak_ptr<DisplayObjectContainer>();
       }
@@ -120,11 +120,16 @@ namespace flair {
       
       Matrix DisplayObject::transformationMatrix() const
       {
-         return _transformationMatrix;
+         geom::Matrix transform;
+         transform.rotate(_rotation);
+         transform.scale(_scaleX, _scaleY);
+         transform.translate(_x, _y);
+         return transform;
       }
       
       Matrix DisplayObject::transformationMatrix(Matrix m)
       {
+         // TODO: Set the x, y, rotation, scale, skew
          return _transformationMatrix = m;
       }
       
@@ -246,7 +251,7 @@ namespace flair {
          }
       }
       
-      void DisplayObject::render(RenderSupport* support, float parentAlpha)
+      void DisplayObject::render(RenderSupport* support, float parentAlpha, geom::Matrix parentTransform)
       {
          
       }

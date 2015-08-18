@@ -50,6 +50,8 @@ namespace net {
       uint32_t idleTimeout();
       uint32_t idleTimeout(uint32_t value);
       
+      bool isFilePath();
+      
       bool manageCookies();
       bool manageCookies(bool value);
       

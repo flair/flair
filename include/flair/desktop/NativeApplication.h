@@ -105,9 +105,9 @@ namespace flair {
          
       // IEventDispatcher
       public:
-         void addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false, int priority = 0) override
+         void addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture = false, int priority = 0, bool once = false) override
          {
-            _stage->addEventListener(type, listener, useCapture, priority);
+            _stage->addEventListener(type, listener, useCapture, priority, once);
          }
          
          template <class T>

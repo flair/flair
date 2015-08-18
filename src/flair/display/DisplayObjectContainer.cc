@@ -159,5 +159,14 @@ namespace flair {
          }
       }
       
+      void DisplayObjectContainer::render(RenderSupport *support, float parentAlpha, geom::Matrix parentTransform)
+      {
+         geom::Matrix transform = transformationMatrix() * parentTransform;
+         for (auto child : _children) {
+            auto renderable = std::dynamic_pointer_cast<DisplayObject>(child);
+            if (renderable) renderable->render(support, parentAlpha, transform);
+         }
+      }
+      
    }
 }

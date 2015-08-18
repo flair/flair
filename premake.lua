@@ -147,9 +147,11 @@ project "reference"
          "ForceFeedback.framework",
          "CoreFoundation.framework"
       }
+      postbuildcommands { "mkdir -p $UNLOCALIZED_RESOURCES_FOLDER_PATH; ditto $PROJECT_DIR/reference/assets/ $UNLOCALIZED_RESOURCES_FOLDER_PATH/" }
 
    filter { "action:gmake*" }
       links { "dl", "m", "rt", "pthread" }
 
    filter { "action:vs*" }
       links { "imm32", "oleaut32", "winmm", "version", "advapi32", "iphlpapi", "psapi", "shell32", "userenv", "ws2_32", "shlwapi" }
+      postbuildcommands { "xcopy /E /S /Y \"$(ProjectDir)reference\\assets\" \"$(TargetDir)\"" }

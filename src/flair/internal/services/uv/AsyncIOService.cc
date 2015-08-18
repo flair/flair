@@ -86,9 +86,9 @@ namespace uv {
       contextStack.push(id);
    }
    
-   void AsyncIOService::addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture, int32_t priority)
+   void AsyncIOService::addEventListener(std::string type, std::function<void(std::shared_ptr<flair::events::Event>)> listener, bool useCapture, int32_t priority, bool once)
    {
-      eventDispatcher->addEventListener(type, listener, useCapture, priority);
+      eventDispatcher->addEventListener(type, listener, useCapture, priority, once);
    }
    
    bool AsyncIOService::dispatchEvent(std::shared_ptr<flair::events::Event> event)

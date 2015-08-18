@@ -147,7 +147,7 @@ project "reference"
          "ForceFeedback.framework",
          "CoreFoundation.framework"
       }
-      postbuildcommands { "mkdir -p $UNLOCALIZED_RESOURCES_FOLDER_PATH; ditto $PROJECT_DIR/reference/assets/ $UNLOCALIZED_RESOURCES_FOLDER_PATH/" }
+      postbuildcommands { "mkdir -p $BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH; ditto $PROJECT_DIR/reference/assets/ $BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/" }
 
    filter { "action:gmake*" }
       links { "dl", "m", "rt", "pthread" }

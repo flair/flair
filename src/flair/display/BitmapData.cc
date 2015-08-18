@@ -36,9 +36,12 @@ namespace display {
    
    void BitmapData::setPixels(geom::Rectangle rect, std::shared_ptr<utils::ByteArray> pixels, BitmapDataFormat format)
    {
-      uint8_t bytes[pixels->length()];
+      uint8_t * bytes = new uint8_t[pixels->length()];
+      
       pixels->readBytes(bytes, 0, pixels->length());
       texture->update(rect, bytes);
+      
+      delete[] bytes;
    }
    
    void BitmapData::setPixels(geom::Rectangle rect, std::vector<uint32_t> pixels, BitmapDataFormat format)

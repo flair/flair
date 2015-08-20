@@ -46,7 +46,7 @@ namespace display {
       
       void setPixels(geom::Rectangle rect, std::vector<uint32_t> pixels, BitmapDataFormat format = BitmapDataFormat::BGRA);
       
-      void setPixels(geom::Rectangle rect, uint8_t * pixels, BitmapDataFormat format = BitmapDataFormat::BGRA);
+      void setPixels(geom::Rectangle rect, uint8_t const* pixels, size_t length, BitmapDataFormat format = BitmapDataFormat::BGRA);
       
       void unlock();
    

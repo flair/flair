@@ -34,7 +34,7 @@ namespace sdl {
       
    // Methods
    public:
-      void update(geom::Rectangle rect, uint8_t * pixels) override;
+      void update(geom::Rectangle rect, uint8_t const* pixels) override;
       
       void lock() override;
       

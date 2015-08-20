@@ -50,7 +50,7 @@ namespace rendering {
    // Methods
    public:
       
-      virtual void update(geom::Rectangle rect, uint8_t * pixels) = 0;
+      virtual void update(geom::Rectangle rect, uint8_t const* pixels) = 0;
       
       virtual void lock() = 0;
       

@@ -1,6 +1,7 @@
 #include "flair/display/BitmapData.h"
 #include "flair/internal/services/IRenderService.h"
 #include "flair/internal/rendering/ITexture.h"
+#include "flair/internal/utils/ByteArrayProxy.h"
 
 namespace flair {
 namespace display {
@@ -36,22 +37,28 @@ namespace display {
    
    void BitmapData::setPixels(geom::Rectangle rect, std::shared_ptr<utils::ByteArray> pixels, BitmapDataFormat format)
    {
-      uint8_t * bytes = new uint8_t[pixels->length()];
+      flair::internal::utils::ByteArrayProxy proxy(pixels);
       
-      pixels->readBytes(bytes, 0, pixels->length());
-      texture->update(rect, bytes);
+      int bytesPerPixel = 8; // TODO: Correct format calculation
+      assert(rect.width() * rect.height() * bytesPerPixel <= proxy.length() && "Pixel buffer is not large enough for this texture");
       
-      delete[] bytes;
+      texture->update(rect, proxy.bytes());
    }
    
    void BitmapData::setPixels(geom::Rectangle rect, std::vector<uint32_t> pixels, BitmapDataFormat format)
    {
+      int bytesPerPixel = 8; // TODO: Correct format calculation
+      assert(rect.width() * rect.height() * bytesPerPixel <= pixels.size() * 4 && "Pixel buffer is not large enough for this texture");
+      
       auto bytes = (uint8_t*)pixels.data();
       texture->update(rect, bytes);
    }
    
-   void BitmapData::setPixels(geom::Rectangle rect, uint8_t * pixels, BitmapDataFormat format)
+   void BitmapData::setPixels(geom::Rectangle rect, uint8_t const* pixels, size_t length, BitmapDataFormat format)
    {
+      int bytesPerPixel = 8; // TODO: Correct format calculation
+      assert(rect.width() * rect.height() * bytesPerPixel <= length && "Pixel buffer is not large enough for this texture");
+      
       texture->update(rect, pixels);
    }
    

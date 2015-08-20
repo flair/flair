@@ -59,7 +59,7 @@ namespace sdl {
       return _texture;
    }
    
-   void Texture::update(geom::Rectangle rect, uint8_t * pixels)
+   void Texture::update(geom::Rectangle rect, uint8_t const* pixels)
    {
       SDL_Rect textureRect;
       textureRect.w = rect.width();

@@ -7,6 +7,8 @@
 #include "flair/utils/IDataOutput.h"
 #include "flair/utils/Endian.h"
 
+namespace flair { namespace internal { namespace utils { class ByteArrayProxy; }}}
+
 namespace flair {
 namespace utils {
    
@@ -111,6 +113,7 @@ namespace utils {
       size_t _position;
       Endian _endian;
       
+      friend class flair::internal::utils::ByteArrayProxy;
       static const size_t BLOCK_SIZE = 1024;
       size_t _byteArrayLength;
       uint8_t * _byteArray;

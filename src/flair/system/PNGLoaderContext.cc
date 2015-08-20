@@ -146,7 +146,7 @@ namespace system {
             auto bitmapData = flair::make_shared<BitmapData>(width, height, format);
             
             bitmapData->lock();
-            bitmapData->setPixels(rect, png->pixels, format);
+            bitmapData->setPixels(rect, png->pixels, width * height * 8, format); // TODO: Correct format calculation
             bitmapData->unlock();
             
             auto bitmap = flair::make_shared<Bitmap>(bitmapData);

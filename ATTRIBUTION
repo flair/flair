@@ -152,8 +152,8 @@ All the tests in the flair project rely on googletest
 
 
 The build system, or more correctly project generation is all handled by premake
-with binaries of premake for multiple operating systems are included in the build
-directory used under the following license.
+(http://premake.github.io/) with binaries of premake for multiple operating
+systems are included in the build directory used under the following license.
 
 	Copyright (c) 2003-2015 Jason Perkins and individual contributors.
 	All rights reserved.

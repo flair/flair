@@ -1,6 +1,7 @@
-includedirs { "../vendor/libpng" }
+includedirs { "../vendor/libpng", "../vendor/include" }
 
-os.copyfile("../vendor/libpng/scripts/pnglibconf.h.prebuilt", "../vendor/libpng/pnglibconf.h")
+os.mkdir("../vendor/include")
+os.copyfile("../vendor/libpng/scripts/pnglibconf.h.prebuilt", "../vendor/include/pnglibconf.h")
 
 files {
    "../vendor/libpng/png.h",

@@ -1,11 +1,14 @@
 bin
 obj
+vendor/include
 flair.xcodeproj
 flair.xcworkspace
 tests.xcodeproj
+reference.xcodeproj
 flair.sln
 flair.vcxproj*
 tests.vcxproj*
+reference.vcxproj*
 flair.sdf
 flair.v12.suo
 *.opensdf

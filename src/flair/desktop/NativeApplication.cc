@@ -346,7 +346,7 @@ namespace desktop {
                      mouseEventType = MouseEvent::RIGHT_CLICK;
                   }
                   else {
-                     mouseEventType = (currentState == -2) ? MouseEvent::DOUBLE_CLICK : MouseEvent::CLICK;
+                     mouseEventType = (currentState == -2 ? MouseEvent::DOUBLE_CLICK : MouseEvent::CLICK);
                   }
                }
                

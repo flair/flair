@@ -3,6 +3,8 @@
 
 #include <cassert>
 #include <cstdint>
+#include <cmath>
+#include <limits>
 #include <type_traits>
 #include <memory>
 #include <functional>

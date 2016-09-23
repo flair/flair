@@ -5,29 +5,27 @@
 #include <functional>
 
 namespace flair {
-   namespace internal {
-      namespace services {
-         
-         class IKeyboardService
-         {
-         public:
-            virtual void modifiers(int shift, int alt, int ctrl, int os) = 0;
-            virtual void modifiers(int * shift, int * alt, int * ctrl, int * os) = 0;
-            
-            virtual void key(uint32_t keyCode, int state) = 0;
-            virtual void key(uint32_t keyCode, int * state) = 0;
-            
-            virtual void activeKeys(std::function<void(uint32_t keyCode, int keyState)> callback) = 0;
-            
-            virtual bool capsLock() = 0;
-            
-            virtual bool numLock() = 0;
-            
-            virtual void clear() = 0;
-         };
-         
-      }
-   }
-}
+namespace internal {
+namespace services {
+   
+   class IKeyboardService
+   {
+   public:
+      virtual void modifiers(int shift, int alt, int ctrl, int os) = 0;
+      virtual void modifiers(int * shift, int * alt, int * ctrl, int * os) = 0;
+      
+      virtual void key(uint32_t keyCode, int state) = 0;
+      virtual void key(uint32_t keyCode, int * state) = 0;
+      
+      virtual void activeKeys(std::function<void(uint32_t keyCode, int keyState)> callback) = 0;
+      
+      virtual bool capsLock() = 0;
+      
+      virtual bool numLock() = 0;
+      
+      virtual void clear() = 0;
+   };
+   
+}}}
 
 #endif

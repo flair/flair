@@ -190,6 +190,7 @@ namespace sdl {
    {
       if (!_rootWindow) return;
       if (keyboardService) keyboardService->clear();
+      if (mouseService) mouseService->clear();
       
       SDL_Event event;
       while (SDL_PollEvent(&event)) {
@@ -221,11 +222,28 @@ namespace sdl {
                   keyboardService->key(event.key.keysym.sym, 1);
                }
             } break;
-               
-            case SDL_MOUSEBUTTONDOWN:
-            case SDL_MOUSEBUTTONUP:
-            case SDL_MOUSEMOTION:
-               break;
+            
+				case SDL_MOUSEBUTTONDOWN: {
+					if (mouseService) {
+                  mouseService->button(event.button.button, -event.button.clicks);
+					}
+				} break;
+					
+				case SDL_MOUSEBUTTONUP: {
+					if (mouseService) {
+						mouseService->button(event.button.button, event.button.clicks);
+					}
+				} break;
+            
+				case SDL_MOUSEMOTION: {
+					if (mouseService) {
+                  int x, y;
+                  SDL_GetMouseState(&x, &y);
+                  mouseService->location(x, y);
+                  
+                  mouseService->movement(event.motion.x, event.motion.y);
+					}
+				} break;
                
             case SDL_WINDOWEVENT: {
                switch (event.window.event) {

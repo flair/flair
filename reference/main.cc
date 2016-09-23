@@ -4,6 +4,7 @@
 #include "flair/display/Bitmap.h"
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
+#include "flair/events/MouseEvent.h"
 #include "flair/filesystem/File.h"
 #include "flair/net/URLRequest.h"
 #include "flair/ui/Keyboard.h"
@@ -17,6 +18,7 @@ using flair::display::Loader;
 using flair::display::Bitmap;
 using flair::events::Event;
 using flair::events::KeyboardEvent;
+using flair::events::MouseEvent;
 using flair::filesystem::File;
 using flair::net::URLRequest;
 using flair::ui::Keyboard;
@@ -32,9 +34,12 @@ protected:
    {
       addEventListener(Event::ACTIVATE, &GameStage::onActivated, this);
       addEventListener(Event::DEACTIVATE, &GameStage::onDeactivated, this);
-      addEventListener(Event::ENTER_FRAME, &GameStage::onEnterFrame, this, false, 0, true);     // Weak Reference
-      addEventListener(KeyboardEvent::KEY_DOWN, &GameStage::onKeyDown, this, false, 0, true);   // Weak Reference
-      addEventListener(KeyboardEvent::KEY_UP, &GameStage::onKeyUp, this, false, 0, true);       // Weak Reference
+      addEventListener(Event::ENTER_FRAME, &GameStage::onEnterFrame, this, false, 0, true);              // Weak Reference
+      addEventListener(KeyboardEvent::KEY_DOWN, &GameStage::onKeyDown, this, false, 0, true);            // Weak Reference
+      addEventListener(KeyboardEvent::KEY_UP, &GameStage::onKeyUp, this, false, 0, true);                // Weak Reference
+      addEventListener(MouseEvent::MOUSE_MOVE, &GameStage::onMouseMove, this, false, 0, true);           // Weak Reference
+      addEventListener(MouseEvent::CLICK, &GameStage::onMouseClick, this, false, 0, true);               // Weak Reference
+      addEventListener(MouseEvent::DOUBLE_CLICK, &GameStage::onMouseDoubleClick, this, false, 0, true);  // Weak Reference
    };
 
 public:
@@ -125,7 +130,11 @@ public:
          auto nativeApp = NativeApplication::nativeApplication();
          nativeApp->exit();
       }
-      
+		
+      if (keyboardEvent->keyCode() == Keyboard::R)
+      {
+        alien->rotation(alien->rotation() + 3.14/2);
+      }
    }
    
    void onKeyUp(std::shared_ptr<Event> e)
@@ -144,6 +153,27 @@ public:
       else if (keyboardEvent->keyCode() == Keyboard::DOWN) {
          directions ^= DIRECTION_DOWN;
       }
+   }
+   
+   void onMouseMove(std::shared_ptr<Event> e)
+   {
+      auto mouseEvent = std::dynamic_pointer_cast<MouseEvent>(e);
+      
+      std::cout << "Mouse Moved: " << mouseEvent->stageX() << ", " << mouseEvent->stageY() << std::endl;
+   }
+   
+   void onMouseClick(std::shared_ptr<Event> e)
+   {
+      auto mouseEvent = std::dynamic_pointer_cast<MouseEvent>(e);
+      
+      std::cout << "Mouse Clicked!" << std::endl;
+   }
+   
+   void onMouseDoubleClick(std::shared_ptr<Event> e)
+   {
+      auto mouseEvent = std::dynamic_pointer_cast<MouseEvent>(e);
+      
+      std::cout << "Mouse Double Clicked!" << std::endl;
    }
    
 protected:

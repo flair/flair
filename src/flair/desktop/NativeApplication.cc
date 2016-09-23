@@ -2,6 +2,7 @@
 #include "flair/ui/Keyboard.h"
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
+#include "flair/events/MouseEvent.h"
 #include "flair/net/FileReference.h"
 #include "flair/net/URLRequest.h"
 #include "flair/display/BitmapData.h"
@@ -21,6 +22,7 @@
 #include "flair/internal/services/sdl/WindowService.h"
 #include "flair/internal/services/sdl/RenderService.h"
 #include "flair/internal/services/sdl/KeyboardService.h"
+#include "flair/internal/services/sdl/MouseService.h"
 #endif
 
 #ifdef FLAIR_IO_UV
@@ -63,6 +65,7 @@ namespace desktop {
 #ifdef FLAIR_PLATFORM_SDL
       windowService = new sdl::WindowService();
       keyboardService = new sdl::KeyboardService();
+      mouseService = new sdl::MouseService();
 #endif
       
 #ifdef FLAIR_RENDERER_SDL
@@ -102,6 +105,7 @@ namespace desktop {
 #ifdef FLAIR_PLATFORM_SDL
       delete static_cast<sdl::WindowService*>(windowService);
       delete static_cast<sdl::KeyboardService*>(keyboardService);
+      delete static_cast<sdl::MouseService*>(mouseService);
 #endif
       
 #ifdef FLAIR_RENDERER_SDL
@@ -285,6 +289,76 @@ namespace desktop {
             keyboardService->modifiers(&shift, &alt, &ctrl, &os);
             keyboardService->activeKeys([&](uint32_t keyCode, int keyState) {
                _stage->dispatchEvent(flair::make_shared<KeyboardEvent>(keyState < 0 ? KeyboardEvent::KEY_DOWN : KeyboardEvent::KEY_UP, true, false, keyCode, keyCode, 0, ctrl != 0, alt != 0, shift != 0, ctrl !=0 || os != 0, os != 0));
+            });
+         }
+         
+         // Dispatch mouse events
+         {
+            int shift = 0, alt = 0, ctrl = 0, os = 0;
+            bool primaryButtonDown = false;
+            keyboardService->modifiers(&shift, &alt, &ctrl, &os);
+            mouseService->buttonStates([&](uint32_t buttonCode, int currentState, int prevState) {
+               const char * mouseEventType = nullptr;
+               
+               int localX, localY, movementX, movementY;
+               mouseService->location(&localX, &localY);
+               mouseService->movement(&movementX, &movementY);
+               
+               
+               // Button Up / Down Events
+               mouseEventType = nullptr;
+               if (currentState < 0) {
+                  if (buttonCode == IMouseService::MIDDLE_BUTTON) {
+                     mouseEventType = MouseEvent::MIDDLE_MOUSE_DOWN;
+                  }
+                  else if (buttonCode == IMouseService::RIGHT_BUTTON) {
+                     mouseEventType = MouseEvent::RIGHT_MOUSE_DOWN;
+                  }
+                  else {
+                     mouseEventType = MouseEvent::MOUSE_DOWN;
+                     primaryButtonDown = true;
+                  }
+               }
+               else if (currentState > 0) {
+                  if (buttonCode == IMouseService::MIDDLE_BUTTON) {
+                     mouseEventType = MouseEvent::MIDDLE_MOUSE_UP;
+                  }
+                  else if (buttonCode == IMouseService::RIGHT_BUTTON) {
+                     mouseEventType = MouseEvent::RIGHT_MOUSE_UP;
+                  }
+                  else {
+                     mouseEventType = MouseEvent::MOUSE_UP;
+                  }
+               }
+               
+               if (mouseEventType) {
+                  _stage->dispatchEvent(flair::make_shared<MouseEvent>(mouseEventType, true, false, (float)localX, (float)localY, (float)movementX, (float)movementY, nullptr, primaryButtonDown, 0, std::abs(currentState), ctrl != 0, alt != 0, shift != 0, ctrl !=0 || os != 0, os != 0));
+               }
+               
+               
+               // Click / Double Click Events
+               mouseEventType = nullptr;
+               if (prevState >= 0 && currentState < 0) {
+                  if (buttonCode == IMouseService::MIDDLE_BUTTON) {
+                     mouseEventType = MouseEvent::MIDDLE_CLICK;
+                  }
+                  else if (buttonCode == IMouseService::RIGHT_BUTTON) {
+                     mouseEventType = MouseEvent::RIGHT_CLICK;
+                  }
+                  else {
+                     mouseEventType = (currentState == -2) ? MouseEvent::DOUBLE_CLICK : MouseEvent::CLICK;
+                  }
+               }
+               
+               if (mouseEventType) {
+                  _stage->dispatchEvent(flair::make_shared<MouseEvent>(mouseEventType, true, false, (float)localX, (float)localY, (float)movementX, (float)movementY, nullptr, primaryButtonDown, 0, std::abs(currentState), ctrl != 0, alt != 0, shift != 0, ctrl !=0 || os != 0, os != 0));
+               }
+               
+               
+               // Movement Events
+               if (movementX != 0 || movementY != 0) {
+                  _stage->dispatchEvent(flair::make_shared<MouseEvent>(MouseEvent::MOUSE_MOVE, true, false, (float)localX, (float)localY, (float)movementX, (float)movementY, nullptr, primaryButtonDown, 0, std::abs(currentState), ctrl != 0, alt != 0, shift != 0, ctrl !=0 || os != 0, os != 0));
+               }
             });
          }
          

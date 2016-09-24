@@ -32,16 +32,6 @@ namespace display {
       return _content;
    }
    
-   float Loader::width() const
-   {
-      return _content ? _content->width() : 0.0f;
-   }
-   
-   float Loader::height() const
-   {
-      return _content ? _content->height() : 0.0f;
-   }
-   
    void Loader::close()
    {
       
@@ -71,6 +61,7 @@ namespace display {
       _loaderContext->create(request, [this](std::shared_ptr<display::DisplayObject> displayObject) {
          if (displayObject) {
             _content = displayObject;
+            
             DisplayObjectContainer::addChildAt(_content, _children.size());
             dispatchEvent(flair::make_shared<events::Event>(events::Event::COMPLETE));
          }

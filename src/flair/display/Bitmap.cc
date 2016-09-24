@@ -5,7 +5,8 @@ namespace display {
    
    Bitmap::Bitmap(std::shared_ptr<BitmapData> bitmapData) : _bitmapData(bitmapData)
    {
-      
+      _width = _bitmapData->width();
+      _height = _bitmapData->height();
    }
    
    Bitmap::~Bitmap()
@@ -23,19 +24,9 @@ namespace display {
       return _bitmapData = value;
    }
    
-   float Bitmap::width() const
-   {
-      return _bitmapData->width();
-   }
-   
-   float Bitmap::height() const
-   {
-      return _bitmapData->height();
-   }
-   
    void Bitmap::render(RenderSupport * support, float parentAlpha, geom::Matrix parentTransform)
    {
-      geom::Matrix transform = transformationMatrix() * parentTransform;
+      geom::Matrix transform = parentTransform * transformationMatrix();
       support->renderBitmap(shared<Bitmap>(), transform);
    }
 

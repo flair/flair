@@ -2,6 +2,7 @@
 #include "flair/display/Stage.h"
 #include "flair/display/Loader.h"
 #include "flair/display/Bitmap.h"
+#include "flair/display/Sprite.h"
 #include "flair/events/Event.h"
 #include "flair/events/KeyboardEvent.h"
 #include "flair/events/MouseEvent.h"
@@ -16,6 +17,7 @@ using flair::JSON;
 using flair::display::Stage;
 using flair::display::Loader;
 using flair::display::Bitmap;
+using flair::display::Sprite;
 using flair::events::Event;
 using flair::events::KeyboardEvent;
 using flair::events::MouseEvent;
@@ -63,16 +65,36 @@ public:
       addChild(background);
       background->load(backgroundUrl);
       
-      // Load an alien
-      std::shared_ptr<URLRequest> alienUrl = flair::make_shared<URLRequest>(File::applicationDirectory()->url() + std::string("/alienPink_swim1.png"));
-      alien = flair::make_shared<Loader>();
-      alien->addEventListener(Event::COMPLETE, [this](std::shared_ptr<Event> e) {
-         alienBitmap = std::dynamic_pointer_cast<Bitmap>(alien->getChildAt(0));
-      }, false, 0, true); // A "WeakReference" for a lambda means execute it once
-      addChild(alien);
+      
+      // Top level alien (we move this guy)
+      alien = flair::make_shared<Sprite>();
       alien->x(50);
       alien->y(stageHeight()/2);
-      alien->load(alienUrl);
+      addChild(alien);
+      
+      // Container for the alien and burst
+      alienLayer = flair::make_shared<Sprite>();
+      alien->addChild(alienLayer);
+      
+      // Load the laser burst
+      std::shared_ptr<URLRequest> laserBurstUrl = flair::make_shared<URLRequest>(File::applicationDirectory()->url() + std::string("/laserBlue_burst.png"));
+      laserBurst = flair::make_shared<Loader>();
+      laserBurst->scaleX(.25f);
+      laserBurst->scaleY(.25f);
+      //alienLayer->addChild(laserBurst);
+      laserBurst->load(laserBurstUrl);
+      
+      // Load an alien
+      std::shared_ptr<URLRequest> alienUrl = flair::make_shared<URLRequest>(File::applicationDirectory()->url() + std::string("/alienPink_swim1.png"));
+      auto alienBitmap = flair::make_shared<Loader>();
+      alienBitmap->addEventListener(Event::COMPLETE, [alienBitmap](std::shared_ptr<Event> e) {
+         alienBitmap->x(-alienBitmap->width() / 2.0f);    // ceneter the alien bitmap
+         alienBitmap->y(-alienBitmap->height() / 2.0f);   // ceneter the alien bitmap
+      }, false, 0, true);
+      alienLayer->addChild(alienBitmap);
+      alienBitmap->load(alienUrl);
+      
+      alienLayer->addChild(laserBurst);
    }
    
    void onDeactivated(std::shared_ptr<Event> e)
@@ -87,7 +109,14 @@ public:
       inc += 0.005f;
       
       // Animate the inner bitmap to float on the y axis
-      if (alienBitmap) alienBitmap->y(std::cos(inc*10.0f) * 50);
+      if (alienLayer) {
+         alienLayer->y(std::cos(inc*10.0f) * 50);
+      }
+      
+      if (laserBurst) {
+         laserBurst->y(std::cos(inc*25.0f) * 80.0f - laserBurst->width() / 2.0f);
+         laserBurst->x(std::sin(inc*25.0f) * 80.0f - laserBurst->height() / 2.0f);
+      }
       
       if (alien) {
          // Calculate the alien velocity against the key state
@@ -178,8 +207,9 @@ public:
    
 protected:
    std::shared_ptr<Loader> background;
-   std::shared_ptr<Loader> alien;
-   std::shared_ptr<Bitmap> alienBitmap;
+   std::shared_ptr<DisplayObjectContainer> alien;
+   std::shared_ptr<DisplayObjectContainer> alienLayer;
+   std::shared_ptr<Loader> laserBurst;
    
    uint32_t directions = 0;
    enum {

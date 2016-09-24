@@ -16,6 +16,22 @@ namespace flair {
          
       }
       
+      float DisplayObjectContainer::width() const
+      {
+         // TODO: Calculate bounds of children objects
+         float width = _width;
+         for (auto const& child : _children) { width = std::max(child->width(), _width); }
+         return width * _scaleX;
+      }
+      
+      float DisplayObjectContainer::height() const
+      {
+         // TODO: Calculate bounds of children objects
+         float height = _height;
+         for (auto const& child : _children) { height = std::max(child->height(), _height); }
+         return height * _scaleY;
+      }
+      
       int DisplayObjectContainer::numChildren() const
       {
          return _children.size();
@@ -161,7 +177,7 @@ namespace flair {
       
       void DisplayObjectContainer::render(RenderSupport *support, float parentAlpha, geom::Matrix parentTransform)
       {
-         geom::Matrix transform = transformationMatrix() * parentTransform;
+         geom::Matrix transform = parentTransform * transformationMatrix();
          for (auto child : _children) {
             auto renderable = std::dynamic_pointer_cast<DisplayObject>(child);
             if (renderable) renderable->render(support, parentAlpha, transform);

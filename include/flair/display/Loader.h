@@ -24,9 +24,6 @@ namespace display {
    public:
       std::shared_ptr<DisplayObject> content();
       
-      float width() const override;
-      float height() const override;
-      
    // Methods
    public:
       void close();

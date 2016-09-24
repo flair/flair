@@ -25,6 +25,9 @@ namespace flair {
          
       // Methods
       public:
+         float width() const override;
+         float height() const override;
+         
          virtual bool contains(std::shared_ptr<DisplayObject> child);
          
          virtual std::shared_ptr<DisplayObject> addChild(std::shared_ptr<DisplayObject> child);

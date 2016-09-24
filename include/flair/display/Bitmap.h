@@ -24,9 +24,6 @@ namespace display {
       std::shared_ptr<BitmapData> bitmapData();
       std::shared_ptr<BitmapData> bitmapData(std::shared_ptr<BitmapData> value);
       
-      float width() const override;
-      float height() const override;
-   
    // Internal
    protected:
       void render(RenderSupport * support, float parentAlpha, geom::Matrix parentTransform) override;

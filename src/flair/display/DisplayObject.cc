@@ -53,22 +53,28 @@ namespace flair {
       
       float DisplayObject::height() const
       {
-         return _height;
+         return _height * _scaleY;
       }
       
       float DisplayObject::height(float height)
       {
-         return _height = height;
+         if (_height > 0.0f) {
+            _scaleY = height / _height;
+         }
+         return this->height();
       }
       
       float DisplayObject::width() const
       {
-         return _width;
+         return _width * _scaleY;
       }
       
       float DisplayObject::width(float width)
       {
-         return _width = width;
+         if (_width > 0.0f) {
+            _scaleX = width / _width;
+         }
+         return this->width();
       }
       
       float DisplayObject::x() const

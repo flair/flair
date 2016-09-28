@@ -9,8 +9,9 @@ flair.sln
 flair.vcxproj*
 tests.vcxproj*
 reference.vcxproj*
-flair.sdf
-flair.v12.suo
+*.sdf
 *.opensdf
+*.suo
+*.VC.db
 Makefile
 *.make

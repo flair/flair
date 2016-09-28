@@ -84,6 +84,7 @@ namespace desktop {
 
 #ifdef FLAIR_PLATFORM_WINDOWS
       platformService = new windows::PlatformService();
+      #undef DOUBLE_CLICK // Win32 define conflict
 #endif
       
       // Setup dependency services

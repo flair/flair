@@ -13,5 +13,6 @@ reference.vcxproj*
 *.opensdf
 *.suo
 *.VC.db
+*.VC.opendb
 Makefile
 *.make
